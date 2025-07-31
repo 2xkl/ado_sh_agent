@@ -23,7 +23,7 @@ stages:
         displayName: "Buildagent infra"
         steps:
           - task: Bash@3
-            displayName: "Terraform Init"
+            displayName: "Terraform Init & Plan"
             inputs:
               targetType: "inline"
               workingDirectory: terraform/build_agent
@@ -37,17 +37,17 @@ stages:
               ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
               ARM_TENANT_ID: $(ARMTENANTID)
 
-          # - task: Bash@3
-          #   displayName: "Terraform Apply (Dev)"
-          #   condition: and(succeeded(), eq('${{ parameters.runApply }}', true))
-          #   inputs:
-          #     targetType: "inline"
-          #     workingDirectory: infra/core-infra
-          #     script: |
-          #       terraform apply dev-tfplan
-          #   env:
-          #     ARM_ACCESS_KEY: $(ARMACCESSKEY)
-          #     ARM_CLIENT_ID: $(ARMCLIENTID)
-          #     ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
-          #     ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
-          #     ARM_TENANT_ID: $(ARMTENANTID)
+          - task: Bash@3
+            displayName: "Terraform Apply"
+            condition: and(succeeded(), eq('${{ parameters.runApply }}', true))
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/build_agent
+              script: |
+                terraform apply common-tfplan
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)
