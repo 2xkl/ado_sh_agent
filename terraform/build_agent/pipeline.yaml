@@ -1,9 +1,8 @@
 trigger:
   - main
 
-# pool:
-#   name: Default
-  # vmImage: "ubuntu-latest"
+pool:
+  name: Default
 
 parameters:
   - name: runApply
