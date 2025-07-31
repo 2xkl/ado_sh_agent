@@ -23,14 +23,14 @@ variable "key_vault_name" {
   default = "strangekvtestss2"
 }
 
-variable "tenant_id" {
-  type = string
-}
+# variable "tenant_id" {
+#   type = string
+# }
 
-variable "service_connection_object_id" {
-  type = string
-}
+# variable "service_connection_object_id" {
+#   type = string
+# }
 
-variable "admin_object_id" {
-  type = string
-}
+# variable "admin_object_id" {
+#   type = string
+# }

@@ -33,31 +33,27 @@ stages:
                 sudo mv terraform /usr/local/bin/
                 terraform version
 
-          # - task: AzureKeyVault@2
-          #   name: FetchSecrets
-          #   inputs:
-          #     azureSubscription: "DEV Platform Integration"
-          #     KeyVaultName: "strangekvtest"
-          #     SecretsFilter: "*"
+          - task: Bash@3
+            displayName: "Terraform Init"
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/build_agent
+              script: |
+                terraform init -backend-config=backend.config
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)
 
-          # - task: Bash@3
-          #   displayName: "Terraform Init & Plan (Dev)"
-          #   inputs:
-          #     targetType: "inline"
-          #     workingDirectory: infra/core-infra
-          #     script: |
-          #       terraform init -reconfigure \
-          #         -backend-config="resource_group_name=devops-test-sec2-rg" \
-          #         -backend-config="storage_account_name=devopsjlk2132" \
-          #         -backend-config="container_name=tfstate" \
-          #         -backend-config="key=core-infra.dev.terraform.tfstate"
-          #       terraform plan -var-file="parameters/dev.tfvars" -out=dev-tfplan
-          #   env:
-          #     ARM_ACCESS_KEY: $(ARMACCESSKEY)
-          #     ARM_CLIENT_ID: $(ARMCLIENTID)
-          #     ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
-          #     ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
-          #     ARM_TENANT_ID: $(ARMTENANTID)
+          - task: Bash@3
+            displayName: "Terraform Plan"
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/build_agent
+              script: |
+                terraform plan -var-file="parameters/common.tfvars" -out=common-tfplan
 
           # - task: Bash@3
           #   displayName: "Terraform Apply (Dev)"
