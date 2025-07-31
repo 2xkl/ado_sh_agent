@@ -1,26 +1,21 @@
 variable "resource_group_name" {
-  type    = string
-  default = "do-test-state-rg"
+  type = string
 }
 
 variable "location" {
-  type    = string
-  default = "westeurope"
+  type = string
 }
 
 variable "storage_account_name" {
-  type    = string
-  default = "devops123123"
+  type = string
 }
 
 variable "container_name" {
-  type    = string
-  default = "tfstate"
+  type = string
 }
 
 variable "key_vault_name" {
-  type    = string
-  default = "strangekvtestss2"
+  type = string
 }
 
 # variable "tenant_id" {
