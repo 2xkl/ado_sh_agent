@@ -1,0 +1,76 @@
+trigger:
+  - main
+
+# pool:
+#   name: Default
+  # vmImage: "ubuntu-latest"
+
+parameters:
+  - name: runApply
+    displayName: "Run Terraform Apply?"
+    type: boolean
+    default: false
+
+variables:
+  - group: SEC_MS
+  - name: TF_VERSION
+    value: "1.7.5"
+
+stages:
+  - stage: Dev
+    displayName: "Terraform Plan (Dev)"
+    jobs:
+      - job: TerraformPlanDev
+        displayName: "Run Terraform Plan for Dev"
+        steps:
+          - task: Bash@3
+            displayName: "Install Terraform"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Installing Terraform version $(TF_VERSION)..."
+                wget https://releases.hashicorp.com/terraform/$(TF_VERSION)/terraform_$(TF_VERSION)_linux_amd64.zip
+                unzip terraform_$(TF_VERSION)_linux_amd64.zip
+                sudo mv terraform /usr/local/bin/
+                terraform version
+
+          # - task: AzureKeyVault@2
+          #   name: FetchSecrets
+          #   inputs:
+          #     azureSubscription: "DEV Platform Integration"
+          #     KeyVaultName: "strangekvtest"
+          #     SecretsFilter: "*"
+
+          # - task: Bash@3
+          #   displayName: "Terraform Init & Plan (Dev)"
+          #   inputs:
+          #     targetType: "inline"
+          #     workingDirectory: infra/core-infra
+          #     script: |
+          #       terraform init -reconfigure \
+          #         -backend-config="resource_group_name=devops-test-sec2-rg" \
+          #         -backend-config="storage_account_name=devopsjlk2132" \
+          #         -backend-config="container_name=tfstate" \
+          #         -backend-config="key=core-infra.dev.terraform.tfstate"
+          #       terraform plan -var-file="parameters/dev.tfvars" -out=dev-tfplan
+          #   env:
+          #     ARM_ACCESS_KEY: $(ARMACCESSKEY)
+          #     ARM_CLIENT_ID: $(ARMCLIENTID)
+          #     ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+          #     ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+          #     ARM_TENANT_ID: $(ARMTENANTID)
+
+          # - task: Bash@3
+          #   displayName: "Terraform Apply (Dev)"
+          #   condition: and(succeeded(), eq('${{ parameters.runApply }}', true))
+          #   inputs:
+          #     targetType: "inline"
+          #     workingDirectory: infra/core-infra
+          #     script: |
+          #       terraform apply dev-tfplan
+          #   env:
+          #     ARM_ACCESS_KEY: $(ARMACCESSKEY)
+          #     ARM_CLIENT_ID: $(ARMCLIENTID)
+          #     ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+          #     ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+          #     ARM_TENANT_ID: $(ARMTENANTID)
