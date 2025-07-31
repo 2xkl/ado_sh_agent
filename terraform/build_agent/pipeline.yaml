@@ -27,10 +27,11 @@ stages:
             displayName: "Terraform Init"
             inputs:
               targetType: "inline"
-              workingDirectory: terraform/build_agent
+              workingDirectory: terraform
               script: |
                 ls
                 pwd
+                cd build_agent
                 terraform init -backend-config=backend.config
             env:
               ARM_ACCESS_KEY: $(ARMACCESSKEY)
