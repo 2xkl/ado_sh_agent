@@ -1,18 +1,15 @@
 # ado_sh_agent
 
 Requirenments:
-terraform
+1. Install az cli
+
+
 
 1. Create storage account for terraform
 
-terraform init
-terraform plan
-terraform apply 
+. ./scripts/backend_storage.sh
 
-terraform apply -auto-approve \
-          -var="service_connection_object_id=${{ parameters.serviceConnectionObjectId }}" \
-          -var="admin_object_id=${{ parameters.adminObjectId }}" \
-          -var="tenant_id=$ARM_TENANT_ID"
+2. Provision build agent
 
-2. Provision ubuntu machine
+
 3. Run ansible script for agent provisioning
