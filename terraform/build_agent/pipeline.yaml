@@ -22,16 +22,12 @@ stages:
       - job: TerraformPlanDev
         displayName: "Run Terraform Plan for Dev"
         steps:
-
           - task: Bash@3
             displayName: "Terraform Init"
             inputs:
               targetType: "inline"
-              workingDirectory: terraform
+              workingDirectory: terraform/build_agent
               script: |
-                ls
-                pwd
-                cd build_agent
                 terraform init -backend-config=backend.config
             env:
               ARM_ACCESS_KEY: $(ARMACCESSKEY)
