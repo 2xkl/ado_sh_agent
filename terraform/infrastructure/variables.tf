@@ -5,3 +5,8 @@ variable "resource_group_name" {
 variable "location" {
   type = string
 }
+
+variable "acr_name" {
+  type        = string
+  description = "Name of the Azure Container Registry"
+}
