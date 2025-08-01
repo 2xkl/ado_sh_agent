@@ -47,6 +47,32 @@ module "subnet_public" {
   resource_group_name = var.resource_group_name
 }
 
+module "jumpbox_nsg" {
+  source              = "../modules/nsg"
+  nsg_name            = "${var.resource_group_name}-jumpbox-nsg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  security_rules = [
+    {
+      name                       = "AllowSSHFromMyIP"
+      priority                   = 100
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_address_prefix      = "91.236.5.10/32"
+      destination_port_range     = "22"
+      source_port_range          = "*"
+      destination_address_prefix = "*"
+    }
+  ]
+}
+
+resource "azurerm_subnet_network_security_group_association" "apim_assoc" {
+  subnet_id                 = module.subnet_public.subnet_id
+  network_security_group_id = module.jumpbox.nsg_id
+}
+
+
 module "nic_backend" {
   source                 = "../modules/network-interface-private"
   network_interface_name = "nic-backend"

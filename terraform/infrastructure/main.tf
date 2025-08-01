@@ -35,6 +35,87 @@ module "apim_nsg" {
   nsg_name            = "${var.resource_group_name}-apim-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
+  security_rules = [
+    {
+      name                       = "Allow-APIM-Frontend-to-Subnet"
+      priority                   = 100
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "VirtualNetwork" # zamiast AzureApiManagement
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "Allow-Subnet-to-APIM-Frontend"
+      priority                   = 110
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "VirtualNetwork" # zamiast AzureApiManagement
+    },
+    {
+      name                       = "Allow-VNet-Internal"
+      priority                   = 120
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "Allow-Internet-Outbound"
+      priority                   = 130
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "Internet"
+    },
+    {
+      name                        = "Allow-APIM-ControlPlane"
+      priority                    = 300
+      direction                   = "Outbound"
+      access                      = "Allow"
+      protocol                    = "Tcp"
+      source_port_range           = "*"
+      destination_port_range      = "3443"
+      source_address_prefix       = "*"
+      destination_address_prefix  = "AzureApiManagement"
+      resource_group_name         = var.resource_group_name
+      network_security_group_name = azurerm_network_security_group.this.name
+    },
+    {
+      name                       = "Deny-All-Inbound"
+      priority                   = 4000
+      direction                  = "Inbound"
+      access                     = "Deny"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "Deny-All-Outbound"
+      priority                   = 4001
+      direction                  = "Outbound"
+      access                     = "Deny"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    }
+  ]
 }
 
 resource "azurerm_subnet_network_security_group_association" "apim_assoc" {

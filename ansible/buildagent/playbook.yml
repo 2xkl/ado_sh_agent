@@ -1,0 +1,150 @@
+- name: Deploy Azure DevOps Agent on VM
+  hosts: azureagents
+  become: yes
+
+  vars:
+    azp_url: "https://dev.azure.com/kamilkural"
+    azp_token: "{{ lookup('env', 'AZP_TOKEN') }}"
+    azp_pool: "Default"
+    azp_agent_dir: "/home/kurkam/azagent"
+    azp_agent_name: "{{ inventory_hostname }}"
+    azp_agent_version: "4.258.1"
+    azp_agent_archive: "vsts-agent-linux-x64-4.258.1.tar.gz"
+    azp_agent_url: "https://download.agent.dev.azure.com/agent/4.258.1/vsts-agent-linux-x64-4.258.1.tar.gz"
+    azp_service_path: "/etc/systemd/system/vsts.agent.kamilkural.Default.{{ inventory_hostname }}.service"
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - curl
+          - jq
+          - libicu-dev
+          - libssl-dev
+          - libkrb5-3
+          - liblttng-ust1
+          - zlib1g
+          - libuuid1
+        state: present
+        update_cache: yes
+
+    - name: Create agent directory
+      file:
+        path: "{{ azp_agent_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Download Azure Pipelines agent
+      get_url:
+        url: "{{ azp_agent_url }}"
+        dest: "/tmp/{{ azp_agent_archive }}"
+        mode: '0644'
+
+    - name: Remove existing agent files if reconfiguring
+      file:
+        path: "{{ azp_agent_dir }}"
+        state: absent
+      when: ansible_check_mode == false
+
+    - name: Recreate agent directory
+      file:
+        path: "{{ azp_agent_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Extract agent
+      unarchive:
+        src: "/tmp/{{ azp_agent_archive }}"
+        dest: "{{ azp_agent_dir }}"
+        remote_src: yes
+
+    - name: Stop existing agent service if running
+      shell: ./svc.sh stop || true
+      args:
+        chdir: "{{ azp_agent_dir }}"
+      ignore_errors: true
+
+    - name: Uninstall existing agent service if installed
+      shell: ./svc.sh uninstall || true
+      args:
+        chdir: "{{ azp_agent_dir }}"
+      ignore_errors: true
+
+    - name: Remove existing systemd unit file
+      file:
+        path: "{{ azp_service_path }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Remove existing agent config (if any)
+      shell: ./config.sh remove --unattended --auth pat --token {{ azp_token }}
+      args:
+        chdir: "{{ azp_agent_dir }}"
+      environment:
+        AGENT_ALLOW_RUNASROOT: "1"
+      ignore_errors: true
+
+    - name: Configure Azure Pipelines agent
+      shell: |
+        ./config.sh --unattended \
+          --url {{ azp_url }} \
+          --auth pat \
+          --token {{ azp_token }} \
+          --pool {{ azp_pool }} \
+          --agent {{ azp_agent_name }} \
+          --acceptTeeEula \
+          --work _work
+      args:
+        chdir: "{{ azp_agent_dir }}"
+      environment:
+        AGENT_ALLOW_RUNASROOT: "1"
+
+    - name: Run command on remote host
+      command: whoami
+      register: result
+
+    - debug:
+        msg: "I am: {{ result.stdout }}"
+
+    - name: Install agent service
+      shell: ./svc.sh install
+      args:
+        chdir: "{{ azp_agent_dir }}"
+
+    - name: Start agent service
+      shell: ./svc.sh start
+      args:
+        chdir: "{{ azp_agent_dir }}"
+
+    - name: Change ownership of agent directory to non-root user
+      file:
+        path: "{{ azp_agent_dir }}"
+        state: directory
+        recurse: yes
+        owner: "kurkam"
+        group: "kurkam"
+
+    - name: Start agent service in background
+      shell: nohup ./run.sh > agent.log 2>&1 &
+      args:
+        chdir: "{{ azp_agent_dir }}"
+      become: false
+      run_once: true
+      delegate_to: localhost
+      vars:
+        ansible_become: false
+        ansible_user: "kurkam"
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: true
