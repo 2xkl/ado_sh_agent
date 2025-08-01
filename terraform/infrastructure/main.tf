@@ -30,6 +30,18 @@ module "subnet_apim" {
   resource_group_name = var.resource_group_name
 }
 
+module "apim_nsg" {
+  source              = "../modules/nsg"
+  nsg_name            = "${var.resource_group_name}-apim-nsg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_subnet_network_security_group_association" "apim_assoc" {
+  subnet_id                 = module.subnet_apim.subnet_id
+  network_security_group_id = module.apim_nsg.nsg_id
+}
+
 module "subnet_ingress" {
   source              = "../modules/subnet"
   subnet_name         = "ingress-subnet"
@@ -80,6 +92,7 @@ module "apim" {
   publisher_name       = "YourCompany"
   publisher_email      = "admin@yourcompany.com"
   virtual_network_type = "Internal"
+  depends_on           = [azurerm_subnet_network_security_group_association]
 }
 
 module "app_gateway" {
