@@ -69,7 +69,7 @@ module "jumpbox_nsg" {
 
 resource "azurerm_subnet_network_security_group_association" "apim_assoc" {
   subnet_id                 = module.subnet_public.subnet_id
-  network_security_group_id = module.jumpbox.nsg_id
+  network_security_group_id = module.jumpbox_nsg.nsg_id
 }
 
 
