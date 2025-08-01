@@ -1,0 +1,56 @@
+variable "vm_name" {
+  type = string
+}
+
+variable "vm_hostname" {
+  type = string
+}
+
+variable "location" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "admin_user" {
+  type = string
+}
+
+variable "admin_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "nic_id" {
+  type = string
+}
+
+variable "primary_blob_endpoint" {
+  type = string
+}
+
+variable "user_assigned_managed_id" {
+  type = string
+}
+
+variable "zone" {
+  type    = string
+  default = ""
+}
+
+variable "vm_sku" {
+  type    = string
+  default = "2022-datacenter-azure-edition"
+}
+
+variable "vm_size" {
+  type    = string
+  default = "Standard_D2lds_v5"
+}
+
+variable "disk_size_gb" {
+  type    = number
+  default = 128
+}

@@ -1,5 +1,9 @@
 resource_group_name  = "z-test-state-rg"
 location             = "westeurope"
+
+user_managed_identity
 storage_account_name = "zdevops123123"
-container_name       = "ztfstate"
-key_vault_name       = "zstrangekvtestss2"
+
+
+# container_name       = "ztfstate"
+# key_vault_name       = "zstrangekvtestss2"
