@@ -9,6 +9,8 @@ Requirenments:
 
 . ./scripts/backend_storage.sh
 
+az group delete --name z-test-state-rg --yes --no-wait
+
 2. Provision build agent
 
 
