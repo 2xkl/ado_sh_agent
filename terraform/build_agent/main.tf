@@ -39,12 +39,13 @@ module "subnet" {
 module "nic" {
   for_each = { for idx, vm in var.vm_config : idx => vm }
 
-  source = "../modules/network_interface"
-  name   = "${each.value.vmNicName}-${var.idx}"
+  source = "../modules/network-interface"
 
   nic_private_ip         = each.value.vmPrivateIPAddress
   nic_subnet_id          = module.subnet.subnet_id
   network_interface_name = each.value.vmNicName
+  location               = var.location
+  resource_group_name    = var.resource_group_name
 }
 
 module "vm" {
