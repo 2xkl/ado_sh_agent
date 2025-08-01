@@ -19,7 +19,7 @@ module "subnet_aks" {
   address_prefixes        = ["10.1.1.0/24"]
   vnet_name               = module.vnet_aks.vnet_name
   resource_group_name     = var.resource_group_name
-  delegation_service_name = "Microsoft.ContainerService/managedClusters"
+  # delegation_service_name = "Microsoft.ContainerService/managedClusters"
 }
 
 module "subnet_apim" {
