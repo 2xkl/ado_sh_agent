@@ -4,13 +4,11 @@ location            = "westeurope"
 user_managed_identity = "thatstheumiiguess"
 storage_account_name  = "zdevops123123"
 
-vm_config = [
-  {
-    vmHostname         = "AZPLIC01"
-    vmName             = "vm-be-lic-sad"
-    vmDataDisks        = []
-    vmAvailabilityZone = "2"
-    vmNicName          = "nic-beasd"
-    vmPrivateIPAddress = "10.0.1.15"
-  }
-]
+vm_config = {
+  vmName             = "vm-be-lic-dev-westeu-001"
+  vmHostname         = "AZPLIC01"
+  vmDataDisks        = []
+  vmNicName          = "nic-be-lic-001-dev-westeu"
+  vmPrivateIPAddress = "10.0.1.5"
+  vmAvailabilityZone = "2"
+}

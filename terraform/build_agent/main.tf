@@ -62,21 +62,32 @@ module "nic_jumpbox" {
   resource_group_name    = var.resource_group_name
 }
 
+# module "nic" {
+#   for_each = { for idx, vm in var.vm_config : idx => vm }
+
+#   source = "../modules/network-interface"
+
+#   nic_private_ip         = each.value.vmPrivateIPAddress
+#   nic_subnet_id          = module.subnet.subnet_id
+#   network_interface_name = each.value.vmNicName
+#   location               = var.location
+#   resource_group_name    = var.resource_group_name
+# }
+
 module "vm" {
   source                   = "../modules/vm"
-  network_interface_id     = module.nic_jumpbox
-  vm_name                  = each.value.vmName
-  vm_hostname              = each.value.vmHostname
+  vm_name                  = var.vm_config.vmName
+  vm_hostname              = var.vm_config.vmHostname
   primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
   user_assigned_managed_id = module.umi.umi_id
-  zone                     = each.value.vmAvailabilityZone
+  zone                     = var.vm_config.vmAvailabilityZone
   admin_password           = "Kurkam33Kurkam33"
   admin_username           = "kurkam"
   location                 = var.location
   resource_group_name      = var.resource_group_name
 
   nic_ids = [
-    module.nic_private.network_interface_id,
-    module.nic_public.network_interface_id
+    module.nic_backend.network_interface_id,
+    module.nic_jumpbox.network_interface_id
   ]
 }

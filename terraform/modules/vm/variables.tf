@@ -55,13 +55,9 @@ variable "disk_size_gb" {
   default = 128
 }
 
-variable "network_interface_id" {
-  type = string
-}
-
 variable "image_publisher" {
   type    = string
-  default = "Canonical" # domyślnie Ubuntu
+  default = "Canonical"
 }
 
 variable "image_offer" {
