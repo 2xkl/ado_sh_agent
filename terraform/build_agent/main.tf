@@ -36,31 +36,42 @@ module "subnet" {
   resource_group_name = var.resource_group_name
 }
 
-module "nic" {
-  for_each = { for idx, vm in var.vm_config : idx => vm }
-
-  source = "../modules/network-interface"
-
-  nic_private_ip         = each.value.vmPrivateIPAddress
-  nic_subnet_id          = module.subnet.subnet_id
-  network_interface_name = each.value.vmNicName
+module "nic_backend" {
+  source                 = "../modules/network-interface-private"
+  network_interface_name = "nic-backend"
+  nic_private_ip         = "10.0.1.5"
+  nic_subnet_id          = module.subnet_backend.subnet_id
   location               = var.location
   resource_group_name    = var.resource_group_name
 }
 
-module "vm" {
-  for_each = { for idx, vm in var.vm_config : idx => vm }
+module "nic_jumpbox" {
+  source                 = "../modules/network-interface-public"
+  network_interface_name = "nic-jumpbox"
+  nic_private_ip         = "10.0.1.10"
+  nic_subnet_id          = module.subnet_public.subnet_id
+  location               = var.location
+  resource_group_name    = var.resource_group_name
+}
 
-  source = "../modules/vm"
+# module "nic" {
+#   for_each = { for idx, vm in var.vm_config : idx => vm }
 
-  vm_name                  = each.value.vmName
-  vm_hostname              = each.value.vmHostname
-  nic_id                   = module.nic[each.key].network_interface_id
-  primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
-  user_assigned_managed_id = module.umi.umi_id
-  zone                     = each.value.vmAvailabilityZone
-  admin_password           = "Kurkam33Kurkam33"
-  admin_user               = "kurkam"
-  location                 = var.location
-  resource_group_name      = var.resource_group_name
+#   source = "../modules/network-interface"
+
+#   nic_private_ip         = each.value.vmPrivateIPAddress
+#   nic_subnet_id          = module.subnet.subnet_id
+#   network_interface_name = each.value.vmNicName
+#   location               = var.location
+#   resource_group_name    = var.resource_group_name
+# }
+
+module "vm_jumpbox" {
+  source               = "../modules/virtual_machine"
+  vm_name              = "vm-jumpbox"
+  location             = var.location
+  resource_group_name  = var.resource_group_name
+  admin_username       = var.admin_username
+  admin_password       = var.admin_password
+  network_interface_id = module.nic_jumpbox.network_interface_id
 }

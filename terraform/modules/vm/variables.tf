@@ -14,7 +14,7 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "admin_user" {
+variable "admin_username" {
   type = string
 }
 
@@ -53,4 +53,23 @@ variable "vm_size" {
 variable "disk_size_gb" {
   type    = number
   default = 128
+}
+
+variable "network_interface_id" {
+  type = string
+}
+
+variable "image_publisher" {
+  type    = string
+  default = "Canonical" # domyślnie Ubuntu
+}
+
+variable "image_offer" {
+  type    = string
+  default = "0001-com-ubuntu-server-focal"
+}
+
+variable "image_sku" {
+  type    = string
+  default = "20_04-lts"
 }
