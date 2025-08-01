@@ -67,5 +67,5 @@ module "aks" {
   node_vm_size        = "Standard_DS2_v2"
   vnet_subnet_id      = module.subnet_aks.subnet_id
 
-  user_managed_identity_id = module.umi.identity_id
+  user_managed_identity_id = module.umi.umi_id
 }
