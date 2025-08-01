@@ -34,7 +34,7 @@ variable "security_rules" {
       protocol                   = "*"
       source_port_range          = "*"
       destination_port_range     = "*"
-      source_address_prefix      = "AzureApiManagement"
+      source_address_prefix      = "VirtualNetwork" # zamiast AzureApiManagement
       destination_address_prefix = "*"
     },
     {
@@ -46,7 +46,7 @@ variable "security_rules" {
       source_port_range          = "*"
       destination_port_range     = "*"
       source_address_prefix      = "*"
-      destination_address_prefix = "AzureApiManagement"
+      destination_address_prefix = "VirtualNetwork" # zamiast AzureApiManagement
     },
     {
       name                       = "Allow-VNet-Internal"
