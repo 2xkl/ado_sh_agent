@@ -26,10 +26,6 @@ variable "deploytime" {
   type = string
 }
 
-variable "storage_account_name" {
-  type = string
-}
-
 variable "vm_config" {
   type = list(object({
     vmName            = string
