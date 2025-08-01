@@ -92,7 +92,7 @@ module "apim" {
   publisher_name       = "YourCompany"
   publisher_email      = "admin@yourcompany.com"
   virtual_network_type = "Internal"
-  depends_on           = [azurerm_subnet_network_security_group_association]
+  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
 }
 
 module "app_gateway" {

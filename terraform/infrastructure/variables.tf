@@ -14,3 +14,4 @@ variable "acr_name" {
 variable "aks_managed_identity" {
   type = string
 }
+
