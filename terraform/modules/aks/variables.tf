@@ -27,3 +27,13 @@ variable "vnet_subnet_id" {
 variable "dns_prefix" {
   type = string
 }
+
+variable "kubernetes_version" {
+  type    = string
+  default = "1.32.6"
+}
+
+variable "user_managed_identity_id" {
+  type    = string
+  default = null
+}

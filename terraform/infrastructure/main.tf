@@ -49,6 +49,14 @@ module "acr" {
   depends_on = [module.rg]
 }
 
+module "umi" {
+  source                = "../modules/umi"
+  user_managed_identity = var.aks_managed_identity
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  depends_on            = [module.rg]
+}
+
 module "aks" {
   source              = "../modules/aks"
   resource_group_name = var.resource_group_name
@@ -58,4 +66,6 @@ module "aks" {
   node_count          = 3
   node_vm_size        = "Standard_DS2_v2"
   vnet_subnet_id      = module.subnet_aks.subnet_id
+
+  user_managed_identity_id = module.umi.identity_id
 }
