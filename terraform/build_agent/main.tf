@@ -28,9 +28,17 @@ module "vnet" {
   resource_group_name = var.resource_group_name
 }
 
-module "subnet" {
+module "subnet_backend" {
   source              = "../modules/subnet"
-  subnet_name         = "nucleus-subnet"
+  subnet_name         = "nucleus-subnetbe"
+  address_prefixes    = ["10.0.1.0/24"]
+  vnet_name           = module.vnet.vnet_name
+  resource_group_name = var.resource_group_name
+}
+
+module "subnet_public" {
+  source              = "../modules/subnet"
+  subnet_name         = "nucleus-subnetpub"
   address_prefixes    = ["10.0.1.0/24"]
   vnet_name           = module.vnet.vnet_name
   resource_group_name = var.resource_group_name
@@ -54,24 +62,11 @@ module "nic_jumpbox" {
   resource_group_name    = var.resource_group_name
 }
 
-# module "nic" {
-#   for_each = { for idx, vm in var.vm_config : idx => vm }
-
-#   source = "../modules/network-interface"
-
-#   nic_private_ip         = each.value.vmPrivateIPAddress
-#   nic_subnet_id          = module.subnet.subnet_id
-#   network_interface_name = each.value.vmNicName
-#   location               = var.location
-#   resource_group_name    = var.resource_group_name
-# }
-
 module "vm" {
   source                   = "../modules/vm"
   network_interface_id     = module.nic_jumpbox
   vm_name                  = each.value.vmName
   vm_hostname              = each.value.vmHostname
-  nic_id                   = module.nic[each.key].network_interface_id
   primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
   user_assigned_managed_id = module.umi.umi_id
   zone                     = each.value.vmAvailabilityZone
@@ -79,4 +74,9 @@ module "vm" {
   admin_username           = "kurkam"
   location                 = var.location
   resource_group_name      = var.resource_group_name
+
+  nic_ids = [
+    module.nic_private.network_interface_id,
+    module.nic_public.network_interface_id
+  ]
 }

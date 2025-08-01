@@ -23,8 +23,8 @@ variable "admin_password" {
   sensitive = true
 }
 
-variable "nic_id" {
-  type = string
+variable "nic_ids" {
+  type = list(string)
 }
 
 variable "primary_blob_endpoint" {
