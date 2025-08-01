@@ -70,6 +70,18 @@ module "aks" {
   user_managed_identity_id = module.umi.umi_id
 }
 
+module "apim" {
+  source              = "../modules/apim"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  apim_name           = "nucleus-apim"
+  subnet_id           = module.subnet_apim.subnet_id
+
+  publisher_name       = "YourCompany"
+  publisher_email      = "admin@yourcompany.com"
+  virtual_network_type = "Internal"
+}
+
 module "app_gateway" {
   source              = "../modules/application-gateway"
   resource_group_name = var.resource_group_name
@@ -77,5 +89,9 @@ module "app_gateway" {
   app_gateway_name    = "nucleus-appgw"
   subnet_id           = module.subnet_ingress.subnet_id
 
-  backend_pool_ip_addresses = module.aks.agent_pool_nodes_ips
+  frontend_ip_configuration_type = "Public"
+
+  backend_pool_ip_addresses = [module.apim.private_ip_address]
+
+  routing_rule_priority = 100
 }
