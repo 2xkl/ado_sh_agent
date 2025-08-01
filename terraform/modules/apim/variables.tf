@@ -1,37 +1,44 @@
-variable "resource_group_name" {
-  description = "Nazwa resource group"
-  type        = string
-}
-
-variable "location" {
-  description = "Region Azure, np. westeurope"
-  type        = string
-}
-
-variable "apim_name" {
-  description = "Nazwa usługi API Management"
-  type        = string
-}
-
+variable "resource_group_name" {}
+variable "location" {}
+variable "apim_name" {}
 variable "publisher_name" {
-  description = "Nazwa wydawcy API"
-  type        = string
-  default     = "YourCompany"
+  default = "YourCompany"
 }
-
 variable "publisher_email" {
-  description = "Email wydawcy API"
-  type        = string
-  default     = "admin@yourcompany.com"
+  default = "admin@yourcompany.com"
 }
-
 variable "virtual_network_type" {
-  description = "Typ wirtualnej sieci APIM (np. Internal, External)"
-  type        = string
-  default     = "Internal"
+  default = "Internal" # jeśli chcesz APIM w VNet, np. "Internal" albo "External"
+}
+variable "subnet_id" {}
+
+resource "azurerm_api_management" "apim" {
+  name                = var.apim_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  publisher_name      = var.publisher_name
+  publisher_email     = var.publisher_email
+  sku_name            = "Developer_1" # albo inna SKU
+
+  virtual_network_type = var.virtual_network_type
+
+  virtual_network_configuration {
+    subnet_id = var.subnet_id
+  }
+
+  tags = {
+    environment = "dev"
+    project     = "nucleus"
+  }
 }
 
-variable "subnet_id" {
-  description = "ID subnetu, w którym ma być umieszczone APIM (jeśli VNet)"
-  type        = string
+output "private_ip_address" {
+  # Jeśli APIM jest w VNet z trybem Internal, możemy zwrócić prywatne IP z interfejsów
+  value       = azurerm_api_management.apim.private_ip_addresses[0]
+  description = "Private IP address of the APIM inside the VNet"
+}
+
+output "apim_service_url" {
+  value       = azurerm_api_management.apim.gateway_url
+  description = "APIM Gateway URL"
 }
