@@ -69,3 +69,13 @@ module "aks" {
 
   user_managed_identity_id = module.umi.umi_id
 }
+
+module "app_gateway" {
+  source              = "../modules/application-gateway"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  app_gateway_name    = "nucleus-appgw"
+  subnet_id           = module.subnet_ingress.subnet_id
+
+  backend_pool_ip_addresses = [] # Tutaj możesz dodać IP backendu (np. node IP lub serwisy AKS)
+}
