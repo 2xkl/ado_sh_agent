@@ -106,7 +106,7 @@ module "vm" {
   resource_group_name      = var.resource_group_name
 
   nic_ids = [
-    module.nic_backend.network_interface_id,
-    module.nic_jumpbox.network_interface_id
+    module.nic_jumpbox.network_interface_id,
+    module.nic_backend.network_interface_id
   ]
 }
