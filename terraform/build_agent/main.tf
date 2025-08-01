@@ -34,7 +34,7 @@ module "vnet" {
 module "subnet_backend" {
   source              = "../modules/subnet"
   subnet_name         = "nucleus-subnetbe"
-  address_prefixes    = ["10.0.1.0/24"]
+  address_prefixes    = ["10.0.0.0/24"]
   vnet_name           = module.vnet.vnet_name
   resource_group_name = var.resource_group_name
 }
@@ -50,7 +50,7 @@ module "subnet_public" {
 module "nic_backend" {
   source                 = "../modules/network-interface-private"
   network_interface_name = "nic-backend"
-  nic_private_ip         = "10.0.1.5"
+  nic_private_ip         = "10.0.0.5"
   nic_subnet_id          = module.subnet_backend.subnet_id
   location               = var.location
   resource_group_name    = var.resource_group_name
@@ -64,18 +64,6 @@ module "nic_jumpbox" {
   location               = var.location
   resource_group_name    = var.resource_group_name
 }
-
-# module "nic" {
-#   for_each = { for idx, vm in var.vm_config : idx => vm }
-
-#   source = "../modules/network-interface"
-
-#   nic_private_ip         = each.value.vmPrivateIPAddress
-#   nic_subnet_id          = module.subnet.subnet_id
-#   network_interface_name = each.value.vmNicName
-#   location               = var.location
-#   resource_group_name    = var.resource_group_name
-# }
 
 module "vm" {
   source                   = "../modules/vm"
