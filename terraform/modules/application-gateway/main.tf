@@ -28,15 +28,15 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   frontend_ip_configuration {
-    name                 = "frontendIpConfig"
-    public_ip_address_id = var.frontend_ip_configuration_type == "Public" ? azurerm_public_ip.appgw_public_ip[0].id : null
-    private_ip_address   = var.frontend_ip_configuration_type == "Private" ? var.private_ip_address : null
+    name                          = "frontendIpConfig"
+    public_ip_address_id          = var.frontend_ip_configuration_type == "Public" ? azurerm_public_ip.appgw_public_ip[0].id : null
+    private_ip_address            = var.frontend_ip_configuration_type == "Private" ? var.private_ip_address : null
     private_ip_address_allocation = var.frontend_ip_configuration_type == "Private" ? "Static" : null
-    subnet_id           = var.frontend_ip_configuration_type == "Private" ? var.subnet_id : null
+    subnet_id                     = var.frontend_ip_configuration_type == "Private" ? var.subnet_id : null
   }
 
   backend_address_pool {
-    name = "backendPool"
+    name         = "backendPool"
     ip_addresses = var.backend_pool_ip_addresses
   }
 
@@ -61,7 +61,10 @@ resource "azurerm_application_gateway" "appgw" {
     http_listener_name         = "httpListener"
     backend_address_pool_name  = "backendPool"
     backend_http_settings_name = "httpSettings"
+
+    priority = var.routing_rule_priority
   }
+
 
   tags = {
     environment = "dev"

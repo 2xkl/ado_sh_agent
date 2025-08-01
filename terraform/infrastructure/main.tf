@@ -14,11 +14,11 @@ module "vnet_aks" {
 }
 
 module "subnet_aks" {
-  source                  = "../modules/subnet"
-  subnet_name             = "aks-subnet"
-  address_prefixes        = ["10.1.1.0/24"]
-  vnet_name               = module.vnet_aks.vnet_name
-  resource_group_name     = var.resource_group_name
+  source              = "../modules/subnet"
+  subnet_name         = "aks-subnet"
+  address_prefixes    = ["10.1.1.0/24"]
+  vnet_name           = module.vnet_aks.vnet_name
+  resource_group_name = var.resource_group_name
   # delegation_service_name = "Microsoft.ContainerService/managedClusters"
 }
 
@@ -77,5 +77,5 @@ module "app_gateway" {
   app_gateway_name    = "nucleus-appgw"
   subnet_id           = module.subnet_ingress.subnet_id
 
-  backend_pool_ip_addresses = [] # Tutaj możesz dodać IP backendu (np. node IP lub serwisy AKS)
+  backend_pool_ip_addresses = module.aks.agent_pool_nodes_ips
 }

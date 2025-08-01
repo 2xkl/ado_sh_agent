@@ -53,3 +53,9 @@ variable "sku_capacity" {
   type        = number
   default     = 2
 }
+
+variable "routing_rule_priority" {
+  description = "Priority of the request routing rule"
+  type        = number
+  default     = 100
+}
