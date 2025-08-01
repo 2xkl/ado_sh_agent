@@ -10,8 +10,8 @@ module "acr" {
   acr_name            = var.acr_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  sku                 = "Standard"           # lub Premium, jeśli potrzebujesz georeplikacji
-  admin_enabled       = false               # true tylko jeśli potrzebujesz login/pw do pushowania
+  sku                 = "Standard"
+  admin_enabled       = false
 
-  depends_on = [ module.rg ]
+  depends_on = [module.rg]
 }

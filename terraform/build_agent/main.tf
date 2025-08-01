@@ -63,7 +63,8 @@ module "nic_jumpbox" {
   nic_subnet_id          = module.subnet_public.subnet_id
   location               = var.location
   resource_group_name    = var.resource_group_name
-  zone                   = var.vm_config.vmAvailabilityZone # 👈 tutaj to podaj
+  zone                   = var.vm_config.vmAvailabilityZone
+  depends_on             = [module.rg]
 }
 
 module "vm" {
