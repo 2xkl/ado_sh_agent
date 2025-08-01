@@ -10,6 +10,7 @@ module "umi" {
   user_managed_identity = var.user_managed_identity
   location              = var.location
   resource_group_name   = var.resource_group_name
+  depends_on            = [module.rg]
 }
 
 module "storage_account" {
@@ -18,6 +19,7 @@ module "storage_account" {
   storage_account_name = var.storage_account_name
   location             = var.location
   resource_group_name  = var.resource_group_name
+  depends_on           = [module.rg]
 }
 
 module "vnet" {
@@ -26,6 +28,7 @@ module "vnet" {
   address_space       = ["10.0.0.0/16"]
   location            = var.location
   resource_group_name = var.resource_group_name
+  depends_on          = [module.rg]
 }
 
 module "subnet_backend" {
