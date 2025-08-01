@@ -81,17 +81,15 @@ module "apim_nsg" {
       destination_address_prefix = "Internet"
     },
     {
-      name                        = "Allow-APIM-ControlPlane"
-      priority                    = 300
-      direction                   = "Outbound"
-      access                      = "Allow"
-      protocol                    = "Tcp"
-      source_port_range           = "*"
-      destination_port_range      = "3443"
-      source_address_prefix       = "*"
-      destination_address_prefix  = "AzureApiManagement"
-      resource_group_name         = var.resource_group_name
-      network_security_group_name = azurerm_network_security_group.this.name
+      name                       = "Allow-APIM-ControlPlane"
+      priority                   = 300
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "3443"
+      source_address_prefix      = "*"
+      destination_address_prefix = "AzureApiManagement"
     },
     {
       name                       = "Deny-All-Inbound"
