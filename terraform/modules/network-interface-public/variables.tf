@@ -17,3 +17,8 @@ variable "location" {
 variable "resource_group_name" {
   type = string
 }
+
+variable "zone" {
+  type    = string
+  default = null
+}

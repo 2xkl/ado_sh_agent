@@ -1,10 +1,12 @@
-resource "azurerm_public_ip" "public_ip" {
-  name                = "${var.network_interface_name}-pip"
+resource "azurerm_public_ip" "this" {
+  name                = "justaname"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
-  sku                 = "Basic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  zones               = [var.zone] # 👈 To jest kluczowe
 }
+
 
 resource "azurerm_network_interface" "nic" {
   name                = var.network_interface_name
