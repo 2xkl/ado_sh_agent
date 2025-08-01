@@ -36,30 +36,30 @@ module "subnet" {
   resource_group_name = var.resource_group_name
 }
 
-# module "nic" {
-#   for_each = { for idx, vm in var.vm_config : idx => vm }
+module "nic" {
+  for_each = { for idx, vm in var.vm_config : idx => vm }
 
-#   source = "../modules/network_interface"
-#   name   = "${each.value.vmNicName}-${var.idx}"
+  source = "../modules/network_interface"
+  name   = "${each.value.vmNicName}-${var.idx}"
 
-#   nic_private_ip         = each.value.vmPrivateIPAddress
-#   nic_subnet_id          = module.subnet.subnet_id
-#   network_interface_name = each.value.vmNicName
-# }
+  nic_private_ip         = each.value.vmPrivateIPAddress
+  nic_subnet_id          = module.subnet.subnet_id
+  network_interface_name = each.value.vmNicName
+}
 
-# module "vm" {
-#   for_each = { for idx, vm in var.vm_config : idx => vm }
+module "vm" {
+  for_each = { for idx, vm in var.vm_config : idx => vm }
 
-#   source = "../modules/vm"
-#   name   = "${each.value.vmName}-${var.deploytime}"
+  source = "../modules/vm"
 
-#   vm_name                  = each.value.vmName
-#   vm_hostname              = each.value.vmHostname
-#   data_disks               = each.value.vmDataDisks
-#   nic_id                   = module.nic[each.key].network_interface_id
-#   primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
-#   user_assigned_managed_id = module.umi.umi_id
-#   zone                     = each.value.vmAvailabilityZone
-#   admin_password           = var.admin_password
-#   admin_user               = var.admin_user
-# }
+  vm_name                  = each.value.vmName
+  vm_hostname              = each.value.vmHostname
+  nic_id                   = module.nic[each.key].network_interface_id
+  primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
+  user_assigned_managed_id = module.umi.umi_id
+  zone                     = each.value.vmAvailabilityZone
+  admin_password           = "Kurkam33Kurkam33"
+  admin_user               = "admin1"
+  location                 = var.location
+  resource_group_name      = var.resource_group_name
+}

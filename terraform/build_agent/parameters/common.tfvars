@@ -1,9 +1,16 @@
-resource_group_name  = "z-test-state-rg"
-location             = "westeurope"
+resource_group_name = "z-test-state-rg"
+location            = "westeurope"
 
 user_managed_identity = "thatstheumiiguess"
-storage_account_name = "zdevops123123"
+storage_account_name  = "zdevops123123"
 
-
-# container_name       = "ztfstate"
-# key_vault_name       = "zstrangekvtestss2"
+vm_config = [
+  {
+    vmHostname         = "AZPLIC01"
+    vmName             = "vm-be-lic-sad"
+    vmDataDisks        = []
+    vmAvailabilityZone = "2"
+    vmNicName          = "nic-beasd"
+    vmPrivateIPAddress = "10.0.1.15"
+  }
+]
