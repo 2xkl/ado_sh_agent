@@ -1,7 +1,7 @@
 resource_group_name  = "z-test-state-rg"
 location             = "westeurope"
 
-user_managed_identity
+user_managed_identity = "thatstheumiiguess"
 storage_account_name = "zdevops123123"
 
 
