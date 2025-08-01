@@ -10,7 +10,7 @@ parameters:
     type: boolean
     default: false
   - name: runDestroy
-    displayName: "Run Terraform Apply?"
+    displayName: "Run Terraform Destroy?"
     type: boolean
     default: false
 
@@ -57,7 +57,7 @@ stages:
               ARM_TENANT_ID: $(ARMTENANTID)
 
           - task: Bash@3
-            displayName: "Terraform Apply"
+            displayName: "Terraform Destroy"
             condition: and(succeeded(), eq('${{ parameters.runDestroy }}', true))
             inputs:
               targetType: "inline"

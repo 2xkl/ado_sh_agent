@@ -66,12 +66,17 @@ module "nic_jumpbox" {
 #   resource_group_name    = var.resource_group_name
 # }
 
-module "vm_jumpbox" {
-  source               = "../modules/virtual_machine"
-  vm_name              = "vm-jumpbox"
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  admin_username       = var.admin_username
-  admin_password       = var.admin_password
-  network_interface_id = module.nic_jumpbox.network_interface_id
+module "vm" {
+  source                   = "../modules/vm"
+  network_interface_id     = module.nic_jumpbox
+  vm_name                  = each.value.vmName
+  vm_hostname              = each.value.vmHostname
+  nic_id                   = module.nic[each.key].network_interface_id
+  primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
+  user_assigned_managed_id = module.umi.umi_id
+  zone                     = each.value.vmAvailabilityZone
+  admin_password           = "Kurkam33Kurkam33"
+  admin_username           = "kurkam"
+  location                 = var.location
+  resource_group_name      = var.resource_group_name
 }
