@@ -33,7 +33,7 @@ stages:
               workingDirectory: terraform/infrastructure
               script: |
                 terraform init -backend-config=backend.config
-                terraform plan -var-file="parameters/infra-dev.tfvars" -out=infra-dev-tfplan
+                terraform plan -var-file="parameters/dev.tfvars" -out=infra-dev-tfplan
             env:
               ARM_ACCESS_KEY: $(ARMACCESSKEY)
               ARM_CLIENT_ID: $(ARMCLIENTID)
