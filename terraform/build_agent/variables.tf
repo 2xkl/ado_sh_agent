@@ -29,7 +29,7 @@ variable "vm_config" {
     vmDataDisks       = list(object({ name = string }))
     vmNicName         = string
     vmPrivateIPAddress = string
-    vmNicSubnet       = string
+    # vmNicSubnet       = string
     vmAvailabilityZone = string
   }))
 }
