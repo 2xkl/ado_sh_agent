@@ -90,6 +90,7 @@ module "nic_jumpbox" {
   location               = var.location
   resource_group_name    = var.resource_group_name
   zone                   = var.vm_config.vmAvailabilityZone
+  depends_on             = [module.rg]
 }
 
 module "vm" {
