@@ -1,0 +1,5 @@
+resource_group_name = "z-rg-apps-dev"
+location            = "westeurope"
+aoi_name            = "z-aoi-apps-dev"
+swa_name            = "z-swa-apps-dev"
+kv_name             = "z-kv-apps-dev"

@@ -1,0 +1,25 @@
+trigger:
+- none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  azureResourceGroup: 'z-dev-state-rg'
+  aksClusterName: 'nucleus-aks-cluster'
+
+steps:
+- script: |
+      az login --service-principal --username "$SP_USERNAME" --password "$SP_PASSWORD" --tenant "$TENANT_ID"
+      az aks get-credentials --resource-group $azureResourceGroup --name $aksClusterName --overwrite-existing
+      kubectl version --client
+  displayName: 'Login to Azure and get AKS credentials'
+
+- script: |
+    helm repo add argo https://argoproj.github.io/argo-helm
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo update
+    helm upgrade --install argocd argo/argo-cd --namespace argocd --create-namespace --set server.service.type=LoadBalancer --set configs.params.'server\.insecure'=true
+    helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+  displayName: 'Install ArgoCD, Prometheus and Grafana'
+
