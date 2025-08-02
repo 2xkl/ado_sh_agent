@@ -118,6 +118,28 @@ module "apim_nsg" {
       destination_address_prefix = "VirtualNetwork"
     },
     {
+      name                       = "sub"
+      priority                   = 110
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = "10.1.3.0/24"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "sub"
+      priority                   = 111
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = "10.1.4.0/24"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
       name                       = "AllowALLInbound"
       priority                   = 199
       direction                  = "Inbound"
@@ -312,10 +334,7 @@ resource "azurerm_subnet_network_security_group_association" "apim_assoc" {
   network_security_group_id = module.apim_nsg.nsg_id
 }
 
-resource "azurerm_subnet_network_security_group_association" "agw_assoc" {
-  subnet_id                 = module.subnet_ingress.subnet_id
-  network_security_group_id = module.apim_nsg.nsg_id
-}
+
 
 module "subnet_ingress" {
   source              = "../modules/subnet"
@@ -370,6 +389,13 @@ module "apim" {
   depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
 }
 
+module "appgw_policy" {
+  source              = "../modules/application-gateway-policy"
+  name                = "nucleus-waf-policy"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
 module "app_gateway" {
   source              = "../modules/application-gateway"
   resource_group_name = var.resource_group_name
@@ -378,8 +404,11 @@ module "app_gateway" {
   subnet_id           = module.subnet_ingress.subnet_id
 
   frontend_ip_configuration_type = "Public"
+  backend_pool_ip_addresses      = [module.apim.private_ip_address]
 
-  backend_pool_ip_addresses = [module.apim.private_ip_address]
+  waf_policy_id = module.appgw_policy.id
+  sku_name      = "WAF_v2"
+  sku_capacity  = 2
 
-  routing_rule_priority = 100
+  rewrite_host = "nucleus-apim.azure-api.net"
 }
