@@ -394,7 +394,7 @@ module "aks" {
   location            = var.location
   aks_cluster_name    = "nucleus-aks-cluster"
   dns_prefix          = "nucleusaks"
-  node_count          = 3
+  node_count          = 1
   node_vm_size        = "Standard_DS2_v2"
   vnet_subnet_id      = module.subnet_aks.subnet_id
 
