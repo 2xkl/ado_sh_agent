@@ -129,7 +129,7 @@ module "apim_nsg" {
       destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                       = "sub"
+      name                       = "sub2"
       priority                   = 111
       direction                  = "Inbound"
       access                     = "Allow"
