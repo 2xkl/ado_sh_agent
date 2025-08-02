@@ -5,6 +5,21 @@ module "rg" {
   location = var.location
 }
 
+module "log_analytics" {
+  source              = "../modules/log-analytics"
+  name                = "nucleus-law"
+  location            = var.location
+  resource_group_name = module.rg.name
+}
+
+module "app_insights" {
+  source              = "../modules/app-insights"
+  name                = "nucleus-ai"
+  location            = var.location
+  resource_group_name = module.rg.name
+  workspace_id        = module.log_analytics.workspace_id
+}
+
 module "vnet_aks" {
   source              = "../modules/vnet"
   vnet_name           = "nucleus-aks-vnet"
