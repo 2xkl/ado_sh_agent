@@ -376,6 +376,12 @@ module "aks" {
   user_managed_identity_id = module.umi.umi_id
 }
 
+module "network_contributor_role" {
+  source       = "../modules/role-assignment"
+  scope        = data.azurerm_subnet.aks_subnet.id
+  principal_id = module.umi.umi_id
+}
+
 module "apim" {
   source              = "../modules/apim"
   resource_group_name = var.resource_group_name
