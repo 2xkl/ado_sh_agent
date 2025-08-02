@@ -37,79 +37,46 @@ module "apim_nsg" {
   resource_group_name = var.resource_group_name
   security_rules = [
     {
-      name                       = "Allow-APIM-Frontend-to-Subnet"
-      priority                   = 100
+      name                       = "GatewayManager-In"
+      priority                   = 300
       direction                  = "Inbound"
       access                     = "Allow"
-      protocol                   = "*"
+      protocol                   = "Tcp"
       source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "VirtualNetwork" # zamiast AzureApiManagement
+      destination_port_range     = "65200-65535"
+      source_address_prefix      = "GatewayManager"
       destination_address_prefix = "*"
     },
     {
-      name                       = "Allow-Subnet-to-APIM-Frontend"
-      priority                   = 110
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "VirtualNetwork" # zamiast AzureApiManagement
-    },
-    {
-      name                       = "Allow-VNet-Internal"
-      priority                   = 120
+      name                       = "LoadBalancer-In"
+      priority                   = 301
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "*"
       source_port_range          = "*"
       destination_port_range     = "*"
-      source_address_prefix      = "VirtualNetwork"
-      destination_address_prefix = "VirtualNetwork"
+      source_address_prefix      = "AzureLoadBalancer"
+      destination_address_prefix = "*"
     },
     {
-      name                       = "Allow-Internet-Outbound"
-      priority                   = 130
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "Internet"
-    },
-    {
-      name                       = "Allow-APIM-ControlPlane"
-      priority                   = 300
-      direction                  = "Outbound"
+      name                       = "APIMManagementEndpoint-In"
+      priority                   = 302
+      direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
       source_port_range          = "*"
       destination_port_range     = "3443"
-      source_address_prefix      = "*"
-      destination_address_prefix = "AzureApiManagement"
+      source_address_prefix      = "ApiManagement"
+      destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                       = "Deny-All-Inbound"
-      priority                   = 4000
+      name                       = "AllowClients"
+      priority                   = 200
       direction                  = "Inbound"
-      access                     = "Deny"
-      protocol                   = "*"
+      access                     = "Allow"
+      protocol                   = "Tcp"
       source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    },
-    {
-      name                       = "Deny-All-Outbound"
-      priority                   = 4001
-      direction                  = "Outbound"
-      access                     = "Deny"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
+      destination_port_range     = "443"
       source_address_prefix      = "*"
       destination_address_prefix = "*"
     }
