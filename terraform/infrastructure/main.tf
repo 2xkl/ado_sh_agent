@@ -376,11 +376,11 @@ module "aks" {
   user_managed_identity_id = module.umi.umi_id
 }
 
-module "network_contributor_role" {
-  source       = "../modules/role-assignment"
-  scope        = module.subnet_aks.subnet_id
-  principal_id = module.umi.umi_id
-}
+# module "network_contributor_role" {
+#   source       = "../modules/role-assignment"
+#   scope        = module.subnet_aks.subnet_id
+#   principal_id = module.umi.umi_id
+# }
 
 module "apim" {
   source              = "../modules/apim"
