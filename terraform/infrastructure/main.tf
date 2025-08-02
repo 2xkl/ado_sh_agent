@@ -45,6 +45,31 @@ module "subnet_apim" {
   resource_group_name = var.resource_group_name
 }
 
+module "aks_nsg" {
+  source              = "../modules/nsg"
+  nsg_name            = "${var.resource_group_name}-apim-nsg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  security_rules = [
+    {
+      name                       = "sub"
+      priority                   = 110
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = "10.1.2.0/24"
+      destination_address_prefix = "VirtualNetwork"
+    }
+  ]
+}
+
+resource "azurerm_subnet_network_security_group_association" "aks_assoc" {
+  subnet_id                 = module.subnet_aks.subnet_id
+  network_security_group_id = module.aks_nsg.nsg_id
+}
+
 module "apim_nsg" {
   source              = "../modules/nsg"
   nsg_name            = "${var.resource_group_name}-apim-nsg"
