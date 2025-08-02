@@ -47,7 +47,7 @@ module "subnet_apim" {
 
 module "aks_nsg" {
   source              = "../modules/nsg"
-  nsg_name            = "${var.resource_group_name}-apim-nsg"
+  nsg_name            = "${var.resource_group_name}-aks-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
   security_rules = [
