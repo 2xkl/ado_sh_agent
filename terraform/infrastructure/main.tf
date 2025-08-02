@@ -312,6 +312,11 @@ resource "azurerm_subnet_network_security_group_association" "apim_assoc" {
   network_security_group_id = module.apim_nsg.nsg_id
 }
 
+resource "azurerm_subnet_network_security_group_association" "agw_assoc" {
+  subnet_id                 = module.subnet_ingress.subnet_id
+  network_security_group_id = module.apim_nsg.nsg_id
+}
+
 module "subnet_ingress" {
   source              = "../modules/subnet"
   subnet_name         = "ingress-subnet"
