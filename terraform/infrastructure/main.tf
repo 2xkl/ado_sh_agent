@@ -378,7 +378,7 @@ module "aks" {
 
 module "network_contributor_role" {
   source       = "../modules/role-assignment"
-  scope        = data.azurerm_subnet.aks_subnet.id
+  scope        = module.subnet_aks.subnet_id
   principal_id = module.umi.umi_id
 }
 
