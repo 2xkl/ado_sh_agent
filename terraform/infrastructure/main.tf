@@ -390,7 +390,7 @@ module "apim" {
 }
 
 module "appgw_policy" {
-  source              = "../modules/application-gateway-policy"
+  source              = "../modules/waf-policy-module"
   name                = "nucleus-waf-policy"
   location            = var.location
   resource_group_name = var.resource_group_name
