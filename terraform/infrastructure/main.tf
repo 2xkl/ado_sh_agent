@@ -406,7 +406,7 @@ module "app_gateway" {
   frontend_ip_configuration_type = "Public"
   backend_pool_ip_addresses      = [module.apim.private_ip_address]
 
-  waf_policy_id = module.appgw_policy.id
+  waf_policy_id = module.appgw_policy.waf_policy_id
   sku_name      = "WAF_v2"
   sku_capacity  = 2
 
