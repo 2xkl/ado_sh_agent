@@ -24,6 +24,6 @@ resource "azurerm_cognitive_deployment" "gpt_35_turbo" {
   model {
     format  = "OpenAI"
     name    = "gpt-35-turbo"
-    version = "0613"
+    version = "1106"
   }
 }
