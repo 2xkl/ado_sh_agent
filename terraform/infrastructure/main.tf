@@ -52,30 +52,30 @@ module "apim_nsg" {
   resource_group_name = var.resource_group_name
   security_rules = [
     {
-      name                       = "GatewayManager-In"
-      priority                   = 300
+      name                       = "AllowHTTPInbound"
+      priority                   = 101
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
       source_port_range          = "*"
-      destination_port_range     = "65200-65535"
-      source_address_prefix      = "GatewayManager"
-      destination_address_prefix = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "Internet"
+      destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                       = "LoadBalancer-In"
-      priority                   = 301
+      name                       = "AllowHTTPSInbound"
+      priority                   = 102
       direction                  = "Inbound"
       access                     = "Allow"
-      protocol                   = "*"
+      protocol                   = "Tcp"
       source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "AzureLoadBalancer"
-      destination_address_prefix = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "Internet"
+      destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                       = "APIMManagementEndpoint-In"
-      priority                   = 302
+      name                       = "AllowMgmtInbound"
+      priority                   = 103
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
@@ -85,13 +85,222 @@ module "apim_nsg" {
       destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                       = "AllowClients"
-      priority                   = 200
+      name                       = "AllowRedisCacheInbound"
+      priority                   = 104
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
       source_port_range          = "*"
+      destination_port_range     = "6381-6383"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "AllowSyncCountersInbound"
+      priority                   = 105
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Udp"
+      source_port_range          = "*"
+      destination_port_range     = "4290"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "AllowLoadBalancerInbound"
+      priority                   = 106
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "AzureLoadBalancer"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "AllowALLInbound"
+      priority                   = 199
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "AllowStorageHTTPOutbound"
+      priority                   = 200
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
       destination_port_range     = "443"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "Storage"
+    },
+    {
+      name                       = "AllowStorageIFSOutbound"
+      priority                   = 201
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "445"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "Storage"
+    },
+    {
+      name                       = "AllowAADOutbound"
+      priority                   = 202
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "AzureActiveDirectory"
+    },
+    {
+      name                       = "AllowSQLOutbound"
+      priority                   = 203
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "1443"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "SQL"
+    },
+    {
+      name                       = "AllowEventHubAMQPOutbound"
+      priority                   = 204
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "5671-5672"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "EventHub"
+    },
+    {
+      name                       = "AllowEventHubHTTPOutbound"
+      priority                   = 205
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "EventHub"
+    },
+    {
+      name                       = "AllowHealthMonitoringOutbound"
+      priority                   = 206
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "12000"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "AzureCloud"
+    },
+    {
+      name                       = "AllowHealthHTTPMonitoringOutbound"
+      priority                   = 207
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "AzureCloud"
+    },
+    {
+      name                       = "AllowMonitoringOutbound"
+      priority                   = 208
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "1886"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "AzureMonitor"
+    },
+    {
+      name                       = "AllowHTTPMonitoringOutbound"
+      priority                   = 209
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "AzureMonitor"
+    },
+    {
+      name                       = "AllowSMTP25RelayOutbound"
+      priority                   = 210
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "25"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "Internet"
+    },
+    # {
+    #   name                       = "AllowSMTP587RelayyOutbound"
+    #   priority                   = 211
+    #   direction                  = "Outbound"
+    #   access                     = "Allow"
+    #   protocol                   = "Tcp"
+    #   source_port_range          = "*"
+    #   destination_port_range     = "587"
+    #   source_address_prefix      = "Internet"
+    #   destination_address_prefix = azurerm_firewall.iag.ip_configuration.0.private_ip_address
+    # },
+    # {
+    #   name                       = "AllowSMTP25028RelayyOutbound"
+    #   priority                   = 212
+    #   direction                  = "Outbound"
+    #   access                     = "Allow"
+    #   protocol                   = "Tcp"
+    #   source_port_range          = "*"
+    #   destination_port_range     = "25028"
+    #   source_address_prefix      = "Internet"
+    #   destination_address_prefix = azurerm_firewall.iag.ip_configuration.0.private_ip_address
+    # },
+    {
+      name                       = "AllowRedisCacheOutbound"
+      priority                   = 213
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "6381-6383"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+      }, {
+
+      name                       = "AllowSyncCountersOutbound"
+      priority                   = 214
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Udp"
+      source_port_range          = "*"
+      destination_port_range     = "4290"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "AllowALLOutbound"
+      priority                   = 299
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "*"
       source_address_prefix      = "*"
       destination_address_prefix = "*"
     }
