@@ -5,6 +5,7 @@ resource "azurerm_public_ip" "appgw_public_ip" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
+  zones               = ["1", "2", "3"] 
 }
 
 resource "azurerm_application_gateway" "appgw" {
