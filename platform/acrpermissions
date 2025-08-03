@@ -5,3 +5,9 @@ aks_managed_identity = "z-umi-aks-dev"
 
 rg_shared = "z-rg-shared-dev"
 acr_name  = "zrgsharedacr001dev"
+
+kubectl create secret docker-registry acr-secret \
+  --docker-server=zrgsharedacr001dev.azurecr.io \
+  --docker-username=zrgsharedacr001dev \
+  --docker-password=H4LOa6uNhNseMfhFPM9rDver2QeLNk3h9vDZlJ86hR+ACRAIgDJX\
+  --docker-email=test@test.test
