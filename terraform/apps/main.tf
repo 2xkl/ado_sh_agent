@@ -28,3 +28,12 @@ module "azure_open_ai" {
   location            = var.location
   resource_group_name = module.rg.name
 }
+
+module "servicebus" {
+  source              = "../modules/servicebus"
+  name                = "sb-apps-dev"
+  location            = var.location
+  resource_group_name = module.rg_shared.name
+  topic_name          = "events"
+  subscription_name   = "inspector"
+}
