@@ -435,7 +435,7 @@ module "apim" {
   publisher_name       = "mycompanyasd"
   publisher_email      = "admin@mycompanyasd.com"
   virtual_network_type = "Internal"
-  # depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
+  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
 }
 
 module "appgw_policy" {
