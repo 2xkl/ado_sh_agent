@@ -59,7 +59,7 @@ module "umi_inspector" {
   source                = "../modules/umi"
   user_managed_identity = "umi-inspector"
   location              = var.location
-  resource_group_name   = module.rg_aks.name
+  resource_group_name   = module.rg.name
 }
 
 module "federation_inspector" {
@@ -69,14 +69,14 @@ module "federation_inspector" {
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
   k8s_namespace       = "inspector"
   k8s_service_account = "inspector-sa"
-  resource_group_name = module.rg_aks.name
+  resource_group_name = module.rg.name
 }
 
 module "umi_chat" {
   source                = "../modules/umi"
   user_managed_identity = "umi-chat"
   location              = var.location
-  resource_group_name   = module.rg_aks.name
+  resource_group_name   = module.rg.name
 }
 
 module "federation_chat" {
@@ -86,7 +86,7 @@ module "federation_chat" {
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
   k8s_namespace       = "chat"
   k8s_service_account = "chat-sa"
-  resource_group_name = module.rg_aks.name
+  resource_group_name = module.rg.name
 }
 
 resource "azurerm_role_assignment" "kv_reader_inspector" {
