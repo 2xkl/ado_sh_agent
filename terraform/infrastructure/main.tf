@@ -77,7 +77,7 @@ module "aks_nsg" {
   resource_group_name = module.rg_network.name
   security_rules = [
     {
-      name                       = "sub"
+      name                       = "AllowAPIMtoAKS"
       priority                   = 110
       direction                  = "Inbound"
       access                     = "Allow"
@@ -168,7 +168,7 @@ module "apim_nsg" {
       destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                       = "sub"
+      name                       = "AllowIngresstoApim"
       priority                   = 110
       direction                  = "Inbound"
       access                     = "Allow"
@@ -176,17 +176,6 @@ module "apim_nsg" {
       source_port_range          = "*"
       destination_port_range     = "80"
       source_address_prefix      = "10.1.3.0/24"
-      destination_address_prefix = "VirtualNetwork"
-    },
-    {
-      name                       = "sub2"
-      priority                   = 111
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "80"
-      source_address_prefix      = "10.1.4.0/24"
       destination_address_prefix = "VirtualNetwork"
     },
     {
@@ -226,13 +215,6 @@ module "rg_aks" {
   location = var.location
 }
 
-# module "rg_aks_node" {
-#   source = "../modules/resource-group"
-
-#   name     = var.rg_aks_node
-#   location = var.location
-# }
-
 module "umi" {
   source                = "../modules/umi"
   user_managed_identity = var.aks_managed_identity
@@ -267,39 +249,39 @@ module "rg_ingress" {
   location = var.location
 }
 
-# module "apim" {
-#   source              = "../modules/apim"
-#   resource_group_name = var.resource_group_name
-#   location            = var.location
-#   apim_name           = "nucleus-apim"
-#   subnet_id           = module.subnet_apim.subnet_id
+module "apim" {
+  source              = "../modules/apim"
+  resource_group_name = module.rg_ingress.name
+  location            = var.location
+  apim_name           = "apim-custom-2xkl"
+  subnet_id           = module.subnet_apim.subnet_id
 
-#   publisher_name       = "cmp"
-#   publisher_email      = "admin@cmp.com"
-#   virtual_network_type = "Internal"
-#   depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
-# }
+  publisher_name       = "cmp"
+  publisher_email      = "admin@cmp.com"
+  virtual_network_type = "Internal"
+  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
+}
 
-# module "appgw_policy" {
-#   source              = "../modules/waf-policy-module"
-#   name                = "nucleus-waf-policy"
-#   location            = var.location
-#   resource_group_name = var.resource_group_name
-# }
+module "appgw_policy" {
+  source              = "../modules/waf-policy-module"
+  name                = "waf-policy"
+  location            = var.location
+  resource_group_name = module.rg_ingress.name
+}
 
-# module "app_gateway" {
-#   source              = "../modules/application-gateway"
-#   resource_group_name = var.resource_group_name
-#   location            = var.location
-#   app_gateway_name    = "nucleus-appgw"
-#   subnet_id           = module.subnet_ingress.subnet_id
+module "app_gateway" {
+  source              = "../modules/application-gateway"
+  resource_group_name = module.rg_ingress.name
+  location            = var.location
+  app_gateway_name    = "appgw"
+  subnet_id           = module.subnet_ingress.subnet_id
 
-#   frontend_ip_configuration_type = "Public"
-#   backend_pool_ip_addresses      = [module.apim.private_ip_address]
+  frontend_ip_configuration_type = "Public"
+  backend_pool_ip_addresses      = [module.apim.private_ip_address]
 
-#   waf_policy_id = module.appgw_policy.waf_policy_id
-#   sku_name      = "WAF_v2"
-#   sku_capacity  = 2
+  waf_policy_id = module.appgw_policy.waf_policy_id
+  sku_name      = "WAF_v2"
+  sku_capacity  = 2
 
-#   rewrite_host = "nucleus-apim.azure-api.net"
-# }
+  rewrite_host = "apim-custom-2xkl.azure-api.net"
+}
