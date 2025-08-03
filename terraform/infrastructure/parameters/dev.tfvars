@@ -16,4 +16,4 @@ rg_aks_node          = "z-rg-aksnode-dev"
 aks_managed_identity = "z-umi-aks-dev"
 
 rg_ingress = "z-rg-ingress-dev"
-apim_name  = "apim-custom-2xkl"
+apim_name  = "apim-custom-onion"
