@@ -12,7 +12,7 @@ resource "azurerm_key_vault" "this" {
     object_id = data.azurerm_client_config.current.object_id
 
     secret_permissions = [
-      "get", "list", "set", "delete"
+      "Get", "List", "Set", "Delete"
     ]
   }
 
