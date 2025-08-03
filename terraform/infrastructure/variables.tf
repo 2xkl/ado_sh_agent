@@ -1,4 +1,20 @@
-variable "resource_group_name" {
+variable "rg_shared" {
+  type = string
+}
+
+variable "rg_network" {
+  type = string
+}
+
+variable "rg_aks" {
+  type = string
+}
+
+variable "rg_aks_node" {
+  type = string
+}
+
+variable "rg_ingress" {
   type = string
 }
 
@@ -6,9 +22,24 @@ variable "location" {
   type = string
 }
 
+variable "range_vnet_aks" {
+  type = list(string)
+}
+
+variable "range_subnet_aks" {
+  type = list(string)
+}
+
+variable "range_subnet_apim" {
+  type = list(string)
+}
+
+variable "range_subnet_ingress" {
+  type = list(string)
+}
+
 variable "acr_name" {
-  type        = string
-  description = "Name of the Azure Container Registry"
+  type = string
 }
 
 variable "aks_managed_identity" {

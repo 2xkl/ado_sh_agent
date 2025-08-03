@@ -4,7 +4,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix
 
-  # node_resource_group = "z-dev-state-np-rg" 
+  node_resource_group = var.resource_group_node_name
 
   kubernetes_version = var.kubernetes_version
 
