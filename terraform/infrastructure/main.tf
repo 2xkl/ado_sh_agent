@@ -435,7 +435,7 @@ module "apim" {
   publisher_name       = "mycompanyasd"
   publisher_email      = "admin@mycompanyasd.com"
   virtual_network_type = "Internal"
-  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
+  # depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
 }
 
 module "appgw_policy" {
@@ -460,7 +460,7 @@ module "app_gateway" {
   sku_name      = "WAF_v2"
   sku_capacity  = 2
 
-  rewrite_host = "apim-custom-2xkl.azure-api.net"
+  rewrite_host = "${var.apim_name}.azure-api.net"
 }
 
 resource "azurerm_api_management_logger" "appinsights" {
