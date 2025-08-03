@@ -463,15 +463,15 @@ module "rg_ingress" {
 #   rewrite_host = "${var.apim_name}.azure-api.net"
 # }
 
-resource "azurerm_api_management_logger" "appinsights" {
-  name                = "appinsights-logger"
-  api_management_name = module.apim.apim_name
-  resource_group_name = module.rg_ingress.name
-  # logger_type         = "applicationInsights"
+# resource "azurerm_api_management_logger" "appinsights" {
+#   name                = "appinsights-logger"
+#   api_management_name = module.apim.apim_name
+#   resource_group_name = module.rg_ingress.name
+#   # logger_type         = "applicationInsights"
 
-  application_insights {
-    instrumentation_key = module.app_insights.instrumentation_key
-  }
+#   application_insights {
+#     instrumentation_key = module.app_insights.instrumentation_key
+#   }
 
-  buffered = false
-}
+#   buffered = false
+# }
