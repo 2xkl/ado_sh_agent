@@ -46,6 +46,11 @@ variable "backend_pool_ip_addresses" {
   description = "List of IP addresses for the backend pool"
 }
 
+variable "apim_name" {
+  type        = string
+  description = "SKU name for Application Gateway (e.g. WAF_v2)"
+}
+
 variable "sku_name" {
   type        = string
   description = "SKU name for Application Gateway (e.g. WAF_v2)"

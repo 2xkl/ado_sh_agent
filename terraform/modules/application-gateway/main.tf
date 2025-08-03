@@ -5,7 +5,7 @@ resource "azurerm_public_ip" "appgw_public_ip" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
-  zones               = ["1", "2", "3"] 
+  zones               = ["1", "2", "3"]
 }
 
 resource "azurerm_application_gateway" "appgw" {
@@ -53,7 +53,7 @@ resource "azurerm_application_gateway" "appgw" {
     name = "APIM-hc"
 
     protocol = "Http"
-    host     = "nucleus-apim.azure-api.net"
+    host     = "${var.apim_name}.azure-api.net"
     path     = "/status-0123456789abcdef"
 
     interval            = 30
@@ -80,7 +80,7 @@ resource "azurerm_application_gateway" "appgw" {
 
       request_header_configuration {
         header_name  = "Host"
-        header_value = "nucleus-apim.azure-api.net"
+        header_value = "${var.apim_name}.azure-api.net"
       }
     }
   }
@@ -119,10 +119,5 @@ resource "azurerm_application_gateway" "appgw" {
     http_listener_name = "listener01"
     url_path_map_name  = "rule01"
     priority           = 11
-  }
-
-  tags = {
-    environment = "dev"
-    project     = "nucleus"
   }
 }

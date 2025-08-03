@@ -253,7 +253,7 @@ module "apim" {
   source              = "../modules/apim"
   resource_group_name = module.rg_ingress.name
   location            = var.location
-  apim_name           = "apim-custom-2xkl"
+  apim_name           = var.apim_name
   subnet_id           = module.subnet_apim.subnet_id
 
   publisher_name       = "cmp"
@@ -273,6 +273,7 @@ module "app_gateway" {
   source              = "../modules/application-gateway"
   resource_group_name = module.rg_ingress.name
   location            = var.location
+  apim_name           = var.apim_name
   app_gateway_name    = "appgw"
   subnet_id           = module.subnet_ingress.subnet_id
 
