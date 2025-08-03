@@ -226,12 +226,12 @@ module "rg_aks" {
   location = var.location
 }
 
-module "rg_aks_node" {
-  source = "../modules/resource-group"
+# module "rg_aks_node" {
+#   source = "../modules/resource-group"
 
-  name     = var.rg_aks_node
-  location = var.location
-}
+#   name     = var.rg_aks_node
+#   location = var.location
+# }
 
 module "umi" {
   source                = "../modules/umi"
@@ -243,7 +243,7 @@ module "umi" {
 module "aks" {
   source                   = "../modules/aks"
   resource_group_name      = module.rg_aks.name
-  resource_group_node_name = module.rg_aks_node.name
+  resource_group_node_name = var.rg_aks_node
   location                 = var.location
   aks_cluster_name         = "akscluster"
   dns_prefix               = "zakscluster001"
