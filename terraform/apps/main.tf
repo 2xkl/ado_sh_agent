@@ -64,11 +64,11 @@ module "umi_inspector" {
 
 module "federation_inspector" {
   source              = "../modules/federation"
-  name                = "inspektor"
-  identity_id         = module.umi_inspektor.identity.id
+  name                = "inspector"
+  identity_id         = module.umi_inspector.identity.id
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  k8s_namespace       = "inspektor"
-  k8s_service_account = "inspektor-sa"
+  k8s_namespace       = "inspector"
+  k8s_service_account = "inspector-sa"
   resource_group_name = module.rg_aks.name
 }
 
@@ -89,7 +89,7 @@ module "federation_chat" {
   resource_group_name = module.rg_aks.name
 }
 
-resource "azurerm_role_assignment" "kv_reader_inspektor" {
+resource "azurerm_role_assignment" "kv_reader_inspector" {
   scope                = module.key_vault.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = module.umi_inspector.identity.principal_id
