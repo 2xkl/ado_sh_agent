@@ -28,11 +28,4 @@ resource "azurerm_kubernetes_cluster" "aks" {
     outbound_type     = "loadBalancer"
   }
 
-  #   role_based_access_control {
-  #     enabled = true
-  #   }
-
-  tags = {
-    environment = "dev"
-  }
 }

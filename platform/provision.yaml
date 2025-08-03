@@ -11,7 +11,7 @@ variables:
 steps:
 - script: |
       az login --service-principal --username "$SP_USERNAME" --password "$SP_PASSWORD" --tenant "$TENANT_ID"
-      az aks get-credentials --resource-group $azureResourceGroup --name $aksClusterName --overwrite-existing
+      az aks get-credentials --resource-group "z-rg-aks-dev" --name "akscluster" --overwrite-existing
       kubectl version --client
 
       az aks update \

@@ -79,7 +79,7 @@ module "umi_chat" {
   resource_group_name   = module.rg_aks.name
 }
 
-module "federation_inspector" {
+module "federation_chat" {
   source              = "../modules/federation"
   name                = "chat"
   identity_id         = module.umi_chat.identity.id
