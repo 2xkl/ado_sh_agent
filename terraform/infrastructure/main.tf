@@ -425,53 +425,53 @@ module "rg_ingress" {
   location = var.location
 }
 
-# module "apim" {
-#   source              = "../modules/apim"
-#   resource_group_name = module.rg_ingress.name
-#   location            = var.location
-#   apim_name           = var.apim_name
-#   subnet_id           = module.subnet_apim.subnet_id
+module "apim" {
+  source              = "../modules/apim"
+  resource_group_name = module.rg_ingress.name
+  location            = var.location
+  apim_name           = var.apim_name
+  subnet_id           = module.subnet_apim.subnet_id
 
-#   publisher_name       = "cmp"
-#   publisher_email      = "admin@cmp.com"
-#   virtual_network_type = "Internal"
-#   depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
-# }
+  publisher_name       = "mycompanyasd"
+  publisher_email      = "admin@mycompanyasd.com"
+  virtual_network_type = "Internal"
+  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
+}
 
-# module "appgw_policy" {
-#   source              = "../modules/waf-policy-module"
-#   name                = "waf-policy"
-#   location            = var.location
-#   resource_group_name = module.rg_ingress.name
-# }
+module "appgw_policy" {
+  source              = "../modules/waf-policy-module"
+  name                = "waf-policy"
+  location            = var.location
+  resource_group_name = module.rg_ingress.name
+}
 
-# module "app_gateway" {
-#   source              = "../modules/application-gateway"
-#   resource_group_name = module.rg_ingress.name
-#   location            = var.location
-#   apim_name           = var.apim_name
-#   app_gateway_name    = "appgw"
-#   subnet_id           = module.subnet_ingress.subnet_id
+module "app_gateway" {
+  source              = "../modules/application-gateway"
+  resource_group_name = module.rg_ingress.name
+  location            = var.location
+  apim_name           = var.apim_name
+  app_gateway_name    = "appgw"
+  subnet_id           = module.subnet_ingress.subnet_id
 
-#   frontend_ip_configuration_type = "Public"
-#   backend_pool_ip_addresses      = [module.apim.private_ip_address]
+  frontend_ip_configuration_type = "Public"
+  backend_pool_ip_addresses      = [module.apim.private_ip_address]
 
-#   waf_policy_id = module.appgw_policy.waf_policy_id
-#   sku_name      = "WAF_v2"
-#   sku_capacity  = 2
+  waf_policy_id = module.appgw_policy.waf_policy_id
+  sku_name      = "WAF_v2"
+  sku_capacity  = 2
 
-#   rewrite_host = "apim-custom-2xkl.azure-api.net"
-# }
+  rewrite_host = "apim-custom-2xkl.azure-api.net"
+}
 
-# resource "azurerm_api_management_logger" "appinsights" {
-#   name                = "appinsights-logger"
-#   api_management_name = module.apim.apim_name
-#   resource_group_name = module.rg_ingress.name
-#   # logger_type         = "applicationInsights"
+resource "azurerm_api_management_logger" "appinsights" {
+  name                = "appinsights-logger"
+  api_management_name = module.apim.apim_name
+  resource_group_name = module.rg_ingress.name
+  # logger_type         = "applicationInsights"
 
-#   application_insights {
-#     instrumentation_key = module.app_insights.instrumentation_key
-#   }
+  application_insights {
+    instrumentation_key = module.app_insights.instrumentation_key
+  }
 
-#   buffered = false
-# }
+  buffered = false
+}
