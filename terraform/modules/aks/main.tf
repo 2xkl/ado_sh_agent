@@ -15,6 +15,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id = var.vnet_subnet_id
   }
 
+  oidc_issuer_enabled = true
+
   identity {
     type         = "UserAssigned"
     identity_ids = [var.user_managed_identity_id]
