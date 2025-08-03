@@ -7,19 +7,15 @@ resource "azurerm_key_vault" "this" {
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
 
-  # access_policy {
-  #   tenant_id = data.azurerm_client_config.current.tenant_id
-  #   object_id = data.azurerm_client_config.current.object_id
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
 
-  #   secret_permissions = [
-  #     "get", "list", "set", "delete"
-  #   ]
-  # }
-
-  tags = {
-    environment = "dev"
-    managed_by  = "terraform"
+    secret_permissions = [
+      "get", "list", "set", "delete"
+    ]
   }
+
 }
 
 data "azurerm_client_config" "current" {}

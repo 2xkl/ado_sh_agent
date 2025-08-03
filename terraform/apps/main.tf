@@ -92,11 +92,11 @@ module "federation_chat" {
   resource_group_name = module.rg.name
 }
 
-resource "azurerm_role_assignment" "admin_for_tf" {
-  principal_id         = "35b2612a-18b1-4d7f-a948-92f4ffd4dc37"
-  role_definition_name = "Key Vault Administrator"
-  scope                = module.key_vault.id
-}
+# resource "azurerm_role_assignment" "admin_for_tf" {
+#   principal_id         = "35b2612a-18b1-4d7f-a948-92f4ffd4dc37"
+#   role_definition_name = "Key Vault Administrator"
+#   scope                = module.key_vault.id
+# }
 
 resource "azurerm_role_assignment" "kv_reader_inspector" {
   scope                = module.key_vault.id
