@@ -67,15 +67,15 @@ module "umi_inspector" {
   resource_group_name   = module.rg.name
 }
 
-module "federation_inspector" {
-  source              = "../modules/federation"
-  name                = "inspector"
-  identity_id         = module.umi_inspector.umi_id
-  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  k8s_namespace       = "inspector"
-  k8s_service_account = "inspector-sa"
-  resource_group_name = module.rg.name
-}
+# module "federation_inspector" {
+#   source              = "../modules/federation"
+#   name                = "inspector"
+#   identity_id         = module.umi_inspector.umi_id
+#   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+#   k8s_namespace       = "inspector"
+#   k8s_service_account = "inspector-sa"
+#   resource_group_name = module.rg.name
+# }
 
 module "umi_chat" {
   source                = "../modules/umi"
@@ -84,15 +84,15 @@ module "umi_chat" {
   resource_group_name   = module.rg.name
 }
 
-module "federation_chat" {
-  source              = "../modules/federation"
-  name                = "chat"
-  identity_id         = module.umi_chat.umi_id
-  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  k8s_namespace       = "chat"
-  k8s_service_account = "chat-sa"
-  resource_group_name = module.rg.name
-}
+# module "federation_chat" {
+#   source              = "../modules/federation"
+#   name                = "chat"
+#   identity_id         = module.umi_chat.umi_id
+#   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+#   k8s_namespace       = "chat"
+#   k8s_service_account = "chat-sa"
+#   resource_group_name = module.rg.name
+# }
 
 module "kv_access_policies" {
   source = "../modules/key-vault-access-policies"
