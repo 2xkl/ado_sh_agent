@@ -18,10 +18,7 @@ resource "azurerm_key_vault" "this" {
 
   lifecycle {
     ignore_changes = [
-      secret_permissions,
-      key_permissions,
-      certificate_permissions,
-      storage_permissions,
+      access_policy
     ]
   }
 
