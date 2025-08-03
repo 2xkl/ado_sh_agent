@@ -42,6 +42,10 @@ variable "acr_name" {
   type = string
 }
 
+variable "apim_name" {
+  type = string
+}
+
 variable "aks_managed_identity" {
   type = string
 }
