@@ -115,14 +115,20 @@ module "kv_access_policies" {
 
   access_policies = [
     {
-      tenant_id          = data.azurerm_client_config.current.tenant_id
-      object_id          = module.umi_inspector.principal_id
-      secret_permissions = ["Get", "List"]
+      tenant_id               = data.azurerm_client_config.current.tenant_id
+      object_id               = module.umi_inspector.principal_id
+      secret_permissions      = ["Get", "List"]
+      key_permissions         = []
+      certificate_permissions = []
+      storage_permissions     = []
     },
     {
-      tenant_id          = data.azurerm_client_config.current.tenant_id
-      object_id          = module.umi_chat.principal_id
-      secret_permissions = ["Get", "List"]
+      tenant_id               = data.azurerm_client_config.current.tenant_id
+      object_id               = module.umi_chat.principal_id
+      secret_permissions      = ["Get", "List"]
+      key_permissions         = []
+      certificate_permissions = []
+      storage_permissions     = []
     }
   ]
 }
