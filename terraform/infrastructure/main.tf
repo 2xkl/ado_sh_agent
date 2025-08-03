@@ -26,7 +26,7 @@ module "acr" {
   location            = var.location
   resource_group_name = module.rg_shared.name
   sku                 = "Standard"
-  admin_enabled       = false
+  admin_enabled       = true
 
   depends_on = [module.rg_shared]
 }
