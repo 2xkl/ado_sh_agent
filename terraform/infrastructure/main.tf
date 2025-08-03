@@ -445,23 +445,23 @@ module "appgw_policy" {
   resource_group_name = module.rg_ingress.name
 }
 
-module "app_gateway" {
-  source              = "../modules/application-gateway"
-  resource_group_name = module.rg_ingress.name
-  location            = var.location
-  apim_name           = var.apim_name
-  app_gateway_name    = "appgw"
-  subnet_id           = module.subnet_ingress.subnet_id
+# module "app_gateway" {
+#   source              = "../modules/application-gateway"
+#   resource_group_name = module.rg_ingress.name
+#   location            = var.location
+#   apim_name           = var.apim_name
+#   app_gateway_name    = "appgw"
+#   subnet_id           = module.subnet_ingress.subnet_id
 
-  frontend_ip_configuration_type = "Public"
-  backend_pool_ip_addresses      = [module.apim.private_ip_address]
+#   frontend_ip_configuration_type = "Public"
+#   backend_pool_ip_addresses      = [module.apim.private_ip_address]
 
-  waf_policy_id = module.appgw_policy.waf_policy_id
-  sku_name      = "WAF_v2"
-  sku_capacity  = 2
+#   waf_policy_id = module.appgw_policy.waf_policy_id
+#   sku_name      = "WAF_v2"
+#   sku_capacity  = 2
 
-  rewrite_host = "${var.apim_name}.azure-api.net"
-}
+#   rewrite_host = "${var.apim_name}.azure-api.net"
+# }
 
 resource "azurerm_api_management_logger" "appinsights" {
   name                = "appinsights-logger"
