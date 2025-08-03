@@ -59,7 +59,7 @@ module "subnet_apim" {
   subnet_name         = "apim-subnet"
   address_prefixes    = var.range_subnet_apim
   vnet_name           = module.vnet_aks.vnet_name
-  resource_group_name = module.rg_ingress.name
+  resource_group_name = module.rg_network.name
 }
 
 module "subnet_ingress" {
