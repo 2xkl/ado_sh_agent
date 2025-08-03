@@ -98,14 +98,14 @@ module "federation_chat" {
 #   scope                = module.key_vault.id
 # }
 
-resource "azurerm_role_assignment" "kv_reader_inspector" {
-  scope                = module.key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = module.umi_inspector.principal_id
-}
+# resource "azurerm_role_assignment" "kv_reader_inspector" {
+#   scope                = module.key_vault.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = module.umi_inspector.principal_id
+# }
 
-resource "azurerm_role_assignment" "kv_reader_chat" {
-  scope                = module.key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = module.umi_chat.principal_id
-}
+# resource "azurerm_role_assignment" "kv_reader_chat" {
+#   scope                = module.key_vault.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = module.umi_chat.principal_id
+# }
