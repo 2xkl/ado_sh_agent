@@ -13,6 +13,12 @@ steps:
       az login --service-principal --username "$SP_USERNAME" --password "$SP_PASSWORD" --tenant "$TENANT_ID"
       az aks get-credentials --resource-group $azureResourceGroup --name $aksClusterName --overwrite-existing
       kubectl version --client
+
+      az aks update \
+      --resource-group "z-rg-aks-dev" \
+      --name "akscluster" \
+      --enable-oidc-issuer \
+      --enable-workload-identity
   displayName: 'Login to Azure and get AKS credentials'
 
 - script: |
@@ -22,4 +28,47 @@ steps:
     helm upgrade --install argocd argo/argo-cd --namespace argocd --create-namespace --set server.service.type=LoadBalancer --set configs.params.'server\.insecure'=true
     helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
   displayName: 'Install ArgoCD, Prometheus and Grafana'
+
+az role assignment create \
+  --assignee <principal-id-of-umi> \
+  --role "Network Contributor" \
+  --scope "/subscriptions/315e574e-7153-4853-8cfe-fa416bb08a23/resourceGroups/z-rg-network-dev/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/aks-subnet"
+
+az aks update \
+  --resource-group "z-rg-aks-dev" \
+  --name "akscluster" \
+  --enable-oidc-issuer \
+  --enable-workload-identity
+
+az aks show --name "akscluster" --resource-group "z-rg-aks-dev" --query "oidcIssuerProfile.issuerUrl" -o tsv
+
+https://westeurope.oic.prod-aks.azure.com/16850073-4977-4869-9163-08e8d38eac81/117789bd-0a47-4120-bc8c-1b569f5e2035/
+
+az identity federated-credential create \
+  --name aks-federated-cred \
+  --identity-name "z-umi-aks-dev" \
+  --resource-group "z-rg-aks-dev" \
+  --issuer "https://westeurope.oic.prod-aks.azure.com/16850073-4977-4869-9163-08e8d38eac81/117789bd-0a47-4120-bc8c-1b569f5e2035/" \
+  --subject system:serviceaccount:demo:app-sa \
+  --audience api://AzureADTokenExchange
+
+{
+  "audiences": [
+    "api://AzureADTokenExchange"
+  ],
+  "id": "/subscriptions/315e574e-7153-4853-8cfe-fa416bb08a23/resourcegroups/z-rg-aks-dev/providers/Microsoft.ManagedIdentity/userAssignedIdentities/z-umi-aks-dev/federatedIdentityCredentials/aks-federated-cred",
+  "issuer": "https://westeurope.oic.prod-aks.azure.com/16850073-4977-4869-9163-08e8d38eac81/117789bd-0a47-4120-bc8c-1b569f5e2035/",
+  "name": "aks-federated-cred",
+  "resourceGroup": "z-rg-aks-dev",
+  "subject": "system:serviceaccount:demo:app-sa",
+  "type": "Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials"
+}
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+  namespace: demo
+  annotations:
+    azure.workload.identity/client-id: <clientId-of-identity>
 

@@ -425,18 +425,18 @@ module "rg_ingress" {
   location = var.location
 }
 
-module "apim" {
-  source              = "../modules/apim"
-  resource_group_name = module.rg_ingress.name
-  location            = var.location
-  apim_name           = var.apim_name
-  subnet_id           = module.subnet_apim.subnet_id
+# module "apim" {
+#   source              = "../modules/apim"
+#   resource_group_name = module.rg_ingress.name
+#   location            = var.location
+#   apim_name           = var.apim_name
+#   subnet_id           = module.subnet_apim.subnet_id
 
-  publisher_name       = "cmp"
-  publisher_email      = "admin@cmp.com"
-  virtual_network_type = "Internal"
-  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
-}
+#   publisher_name       = "cmp"
+#   publisher_email      = "admin@cmp.com"
+#   virtual_network_type = "Internal"
+#   depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
+# }
 
 module "appgw_policy" {
   source              = "../modules/waf-policy-module"
