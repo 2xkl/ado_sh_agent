@@ -94,20 +94,6 @@ module "federation_chat" {
   resource_group_name = module.rg.name
 }
 
-# resource "azurerm_role_assignment" "kv_reader_inspector" {
-#   scope                = module.key_vault.id
-#   role_definition_name = "Key Vault Secrets User"
-#   principal_id         = module.umi_inspector.principal_id
-#   depends_on           = [module.key_vault]
-# }
-
-# resource "azurerm_role_assignment" "kv_reader_chat" {
-#   scope                = module.key_vault.id
-#   role_definition_name = "Key Vault Secrets User"
-#   principal_id         = module.umi_chat.principal_id
-#   depends_on           = [module.key_vault]
-# }
-
 module "kv_access_policies" {
   source = "../modules/key-vault-access-policies"
 

@@ -398,6 +398,12 @@ module "umi" {
   resource_group_name   = module.rg_aks.name
 }
 
+resource "azurerm_role_assignment" "umi_acr_pull" {
+  scope                = module.acr.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = module.umi.principal_id
+}
+
 module "aks" {
   source                   = "../modules/aks"
   resource_group_name      = module.rg_aks.name
