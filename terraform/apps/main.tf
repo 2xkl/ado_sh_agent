@@ -65,7 +65,7 @@ module "umi_inspector" {
 module "federation_inspector" {
   source              = "../modules/federation"
   name                = "inspector"
-  identity_id         = module.umi_inspector.umi_id.id
+  identity_id         = module.umi_inspector.umi_id
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
   k8s_namespace       = "inspector"
   k8s_service_account = "inspector-sa"
@@ -82,7 +82,7 @@ module "umi_chat" {
 module "federation_chat" {
   source              = "../modules/federation"
   name                = "chat"
-  identity_id         = module.umi_chat.umi_id.id
+  identity_id         = module.umi_chat.umi_id
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
   k8s_namespace       = "chat"
   k8s_service_account = "chat-sa"
