@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 module "rg" {
   source = "../modules/resource-group"
 
@@ -92,16 +94,35 @@ module "federation_chat" {
   resource_group_name = module.rg.name
 }
 
-resource "azurerm_role_assignment" "kv_reader_inspector" {
-  scope                = module.key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = module.umi_inspector.principal_id
-  depends_on           = [module.key_vault]
-}
+# resource "azurerm_role_assignment" "kv_reader_inspector" {
+#   scope                = module.key_vault.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = module.umi_inspector.principal_id
+#   depends_on           = [module.key_vault]
+# }
 
-resource "azurerm_role_assignment" "kv_reader_chat" {
-  scope                = module.key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = module.umi_chat.principal_id
-  depends_on           = [module.key_vault]
+# resource "azurerm_role_assignment" "kv_reader_chat" {
+#   scope                = module.key_vault.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = module.umi_chat.principal_id
+#   depends_on           = [module.key_vault]
+# }
+
+module "kv_access_policies" {
+  source = "../modules/key-vault-access-policies"
+
+  key_vault_id = module.key_vault.id
+
+  access_policies = [
+    {
+      tenant_id          = data.azurerm_client_config.current.tenant_id
+      object_id          = module.umi_inspector.principal_id
+      secret_permissions = ["Get", "List"]
+    },
+    {
+      tenant_id          = data.azurerm_client_config.current.tenant_id
+      object_id          = module.umi_chat.principal_id
+      secret_permissions = ["Get", "List"]
+    }
+  ]
 }

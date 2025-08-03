@@ -47,6 +47,12 @@ az aks update \
   --enable-oidc-issuer \
   --enable-workload-identity
 
+az role assignment create \
+  --assignee 35b2612a-18b1-4d7f-a948-92f4ffd4dc37 \
+  --role "User Access Administrator" \
+  --scope "/subscriptions/315e574e-7153-4853-8cfe-fa416bb08a23"
+
+
 az aks show --name "akscluster" --resource-group "z-rg-aks-dev" --query "oidcIssuerProfile.issuerUrl" -o tsv
 
 https://westeurope.oic.prod-aks.azure.com/16850073-4977-4869-9163-08e8d38eac81/117789bd-0a47-4120-bc8c-1b569f5e2035/
