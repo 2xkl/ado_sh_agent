@@ -50,6 +50,9 @@ resource "azurerm_key_vault_secret" "openai_key" {
 #   subscription_name   = "inspector"
 # }
 
+# rg_shared = "z-rg-shared-dev"
+# acr_name  = "zrgsharedacr001dev"
+
 data "azurerm_kubernetes_cluster" "aks" {
   name                = "akscluster"
   resource_group_name = "z-rg-aks-dev"
@@ -89,14 +92,22 @@ module "federation_chat" {
   resource_group_name = module.rg.name
 }
 
+resource "azurerm_role_assignment" "admin_for_tf" {
+  principal_id         = "35b2612a-18b1-4d7f-a948-92f4ffd4dc37"
+  role_definition_name = "Key Vault Administrator"
+  scope                = module.key_vault.id
+}
+
 resource "azurerm_role_assignment" "kv_reader_inspector" {
   scope                = module.key_vault.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = module.umi_inspector.principal_id
+  depends_on           = [azurerm_role_assignment.admin_for_tf]
 }
 
 resource "azurerm_role_assignment" "kv_reader_chat" {
   scope                = module.key_vault.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = module.umi_chat.principal_id
+  depends_on           = [azurerm_role_assignment.admin_for_tf]
 }

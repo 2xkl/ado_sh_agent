@@ -29,6 +29,13 @@ steps:
     helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
   displayName: 'Install ArgoCD, Prometheus and Grafana'
 
+
+az role assignment create \
+  --assignee-object-id ed84abe5-9f5a-4499-bd19-510d1eed9b59 \
+  --role "Network Contributor" \
+  --scope /subscriptions/315e574e-7153-4853-8cfe-fa416bb08a23/resourceGroups/z-rg-network-dev/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/aks-subnet
+
+
 az role assignment create \
   --assignee <principal-id-of-umi> \
   --role "Network Contributor" \
