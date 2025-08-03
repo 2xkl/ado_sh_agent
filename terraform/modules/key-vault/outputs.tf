@@ -3,5 +3,5 @@ output "vault_uri" {
 }
 
 output "id" {
-  value = azurerm_key_vault.kv.id
+  value = azurerm_key_vault.this.id
 }
