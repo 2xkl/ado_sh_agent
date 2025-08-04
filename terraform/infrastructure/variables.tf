@@ -22,7 +22,7 @@ variable "location" {
   type = string
 }
 
-variable "range_vnet_aks" {
+variable "range_vnet" {
   type = list(string)
 }
 
@@ -50,3 +50,6 @@ variable "aks_managed_identity" {
   type = string
 }
 
+variable "range_subnet_pe" {
+  type = list(string)
+}

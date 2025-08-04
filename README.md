@@ -15,3 +15,10 @@ az group delete --name z-test-state-rg --yes --no-wait
 
 
 3. Run ansible script for agent provisioning
+
+
+Run infrastructure core, //apim name
+Run apps core, //apim name check? nie ma
+
+apim dla mocka
+apim dla echa
