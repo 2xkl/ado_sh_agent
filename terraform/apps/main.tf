@@ -53,15 +53,33 @@ resource "azurerm_private_dns_a_record" "keyvault" {
   records = [module.kv_private_endpoint.private_ip_address]
 }
 
-# module "storage_private_endpoint" {
-#   source              = "../modules/private-endpoint"
-#   name                = "storage"
-#   location            = var.location
-#   resource_group_name = module.rg.name
-#   subnet_id           = module.vnet.subnets["private"].id
-#   resource_id         = module.storage_account.id
-#   subresource_names   = ["blob"]
-# }
+module "storage" {
+  source               = "../modules/storage-account"
+  storage_account_name = "storappsdevasd213"
+  resource_group_name  = module.rg.name
+  location             = var.location
+  replication_type     = "LRS"
+  table_name           = "email"
+}
+
+module "storage_private_endpoint" {
+  source              = "../modules/private-endpoint"
+  name                = "storage"
+  location            = var.location
+  resource_group_name = "z-rg-network-dev"
+  subnet_id           = data.azurerm_subnet.private.id
+  resource_id         = module.storage.id
+  subresource_names   = ["blob"]
+}
+
+resource "azurerm_private_dns_a_record" "keyvault" {
+  name                = module.storage.name
+  zone_name           = "privatelink.vaultcore.azure.net"
+  resource_group_name = "z-rg-network-dev"
+
+  ttl     = 10
+  records = [module.storage_private_endpoint.private_ip_address]
+}
 
 module "azure_open_ai" {
   source = "../modules/azure-openai"

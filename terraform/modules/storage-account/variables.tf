@@ -10,6 +10,10 @@ variable "resource_group_name" {
   type = string
 }
 
+variable "table_name" {
+  type = string
+}
+
 variable "replication_type" {
   type    = string
   default = "LRS"
