@@ -20,7 +20,7 @@ module "federation_chat" {
 module "kv_access_policies" {
   source = "../../../modules/key-vault-access-policies"
 
-  key_vault_id = var.key_vault.id
+  key_vault_id = var.key_vault_id
 
   access_policies = [
     {
