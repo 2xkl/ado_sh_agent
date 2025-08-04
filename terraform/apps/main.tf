@@ -44,7 +44,7 @@ resource "azurerm_private_dns_a_record" "keyvault" {
   zone_name           = "privatelink.vaultcore.azure.net"
   resource_group_name = "z-rg-network-dev"
 
-  ttl     = 300
+  ttl     = 10
   records = [module.kv_private_endpoint.private_ip_address]
 }
 
@@ -153,4 +153,5 @@ module "kv_access_policies" {
       storage_permissions     = []
     }
   ]
+  depends_on = [module.key_vault, module.umi_inspector, module.umi_chat]
 }
