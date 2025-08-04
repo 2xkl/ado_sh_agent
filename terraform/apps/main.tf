@@ -68,7 +68,7 @@ module "storage_private_endpoint" {
   location            = var.location
   resource_group_name = "z-rg-network-dev"
   subnet_id           = data.azurerm_subnet.private.id
-  resource_id         = module.storage.id
+  resource_id         = module.storage.storage_id
   subresource_names   = ["blob"]
 }
 
