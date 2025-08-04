@@ -131,4 +131,8 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_diag" {
     category = "AllMetrics"
   }
 
+  enabled_log {
+    category_group = "allLogs"
+  }
+
 }

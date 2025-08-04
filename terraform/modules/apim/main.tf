@@ -22,4 +22,12 @@ resource "azurerm_monitor_diagnostic_setting" "apim_diag" {
   enabled_metric {
     category = "AllMetrics"
   }
+
+  enabled_log {
+    category_group = "allLogs"
+  }
+
+  enabled_log {
+    category_group = "audit"
+  }
 }
