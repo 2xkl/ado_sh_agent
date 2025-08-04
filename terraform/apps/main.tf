@@ -8,7 +8,7 @@ data "azurerm_kubernetes_cluster" "aks" {
 module "rg" {
   source = "../modules/resource-group"
 
-  name     = var.resource_group_name
+  name     = module.rg.name
   location = var.location
 }
 
@@ -38,7 +38,7 @@ module "kv_private_endpoint" {
   source              = "../modules/private-endpoint"
   name                = "kv"
   location            = var.location
-  resource_group_name = module.rg.name
+  resource_group_name = "z-rg-network-dev"
   subnet_id           = data.azurerm_subnet.private.id
   resource_id         = module.key_vault.id
   subresource_names   = ["vault"]
@@ -52,7 +52,6 @@ resource "azurerm_private_dns_a_record" "keyvault" {
   ttl     = 10
   records = [module.kv_private_endpoint.private_ip_address]
 }
-
 
 # module "storage_private_endpoint" {
 #   source              = "../modules/private-endpoint"
@@ -93,62 +92,63 @@ module "servicebus" {
   subscription_name   = "mails"
 }
 
-module "umi_inspector" {
-  source                = "../modules/umi"
-  user_managed_identity = "umi-inspector"
-  location              = var.location
-  resource_group_name   = module.rg.name
+module "inspector" {
+  source              = "./microservices/inspector"
+  location            = var.location
+  resource_group_name = module.rg.name
+  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  key_vault_id        = module.key_vault.id
 }
 
-module "federation_inspector" {
-  source              = "../modules/federation"
-  name                = "inspector"
-  identity_id         = module.umi_inspector.umi_id
+module "chat" {
+  source              = "./microservices/chat"
+  location            = var.location
+  resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  k8s_namespace       = "inspector"
-  k8s_service_account = "inspector-sa"
+  key_vault_id        = module.key_vault.id
+}
+
+module "publisher" {
+  source              = "./microservices/publisher"
+  location            = var.location
   resource_group_name = module.rg.name
 }
 
-module "umi_chat" {
-  source                = "../modules/umi"
-  user_managed_identity = "umi-chat"
-  location              = var.location
-  resource_group_name   = module.rg.name
-}
-
-module "federation_chat" {
-  source              = "../modules/federation"
-  name                = "chat"
-  identity_id         = module.umi_chat.umi_id
-  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  k8s_namespace       = "chat"
-  k8s_service_account = "chat-sa"
+module "receiver" {
+  source              = "./microservices/receiver"
+  location            = var.location
   resource_group_name = module.rg.name
 }
 
-module "kv_access_policies" {
-  source = "../modules/key-vault-access-policies"
-
-  key_vault_id = module.key_vault.id
-
-  access_policies = [
-    {
-      tenant_id               = data.azurerm_client_config.current.tenant_id
-      object_id               = module.umi_inspector.principal_id
-      secret_permissions      = ["Get", "List"]
-      key_permissions         = []
-      certificate_permissions = []
-      storage_permissions     = []
-    },
-    {
-      tenant_id               = data.azurerm_client_config.current.tenant_id
-      object_id               = module.umi_chat.principal_id
-      secret_permissions      = ["Get", "List"]
-      key_permissions         = []
-      certificate_permissions = []
-      storage_permissions     = []
-    }
-  ]
-  depends_on = [module.key_vault, module.umi_inspector, module.umi_chat]
+module "viewer" {
+  source              = "./microservices/viewer"
+  location            = var.location
+  resource_group_name = module.rg.name
 }
+
+
+# module "kv_access_policies" {
+#   source = "../modules/key-vault-access-policies"
+
+#   key_vault_id = module.key_vault.id
+
+#   access_policies = [
+#     {
+#       tenant_id               = data.azurerm_client_config.current.tenant_id
+#       object_id               = module.umi_inspector.principal_id
+#       secret_permissions      = ["Get", "List"]
+#       key_permissions         = []
+#       certificate_permissions = []
+#       storage_permissions     = []
+#     },
+#     {
+#       tenant_id               = data.azurerm_client_config.current.tenant_id
+#       object_id               = module.umi_chat.principal_id
+#       secret_permissions      = ["Get", "List"]
+#       key_permissions         = []
+#       certificate_permissions = []
+#       storage_permissions     = []
+#     }
+#   ]
+#   depends_on = [module.key_vault, module.umi_inspector, module.umi_chat]
+# }
