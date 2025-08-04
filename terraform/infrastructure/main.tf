@@ -454,10 +454,11 @@ module "apim" {
   apim_name           = var.apim_name
   subnet_id           = module.subnet_apim.subnet_id
 
-  publisher_name       = "mycompanyasd"
-  publisher_email      = "admin@mycompanyasd.com"
-  virtual_network_type = "Internal"
-  depends_on           = [azurerm_subnet_network_security_group_association.apim_assoc]
+  publisher_name             = "mycompanyasd"
+  publisher_email            = "admin@mycompanyasd.com"
+  virtual_network_type       = "Internal"
+  log_analytics_workspace_id = module.log_analytics.workspace_id
+  depends_on                 = [azurerm_subnet_network_security_group_association.apim_assoc]
 }
 
 module "appgw_policy" {
@@ -468,12 +469,13 @@ module "appgw_policy" {
 }
 
 module "app_gateway" {
-  source              = "../modules/application-gateway"
-  resource_group_name = module.rg_ingress.name
-  location            = var.location
-  apim_name           = var.apim_name
-  app_gateway_name    = "appgw"
-  subnet_id           = module.subnet_ingress.subnet_id
+  source                     = "../modules/application-gateway"
+  resource_group_name        = module.rg_ingress.name
+  location                   = var.location
+  log_analytics_workspace_id = module.log_analytics.workspace_id
+  apim_name                  = var.apim_name
+  app_gateway_name           = "appgw"
+  subnet_id                  = module.subnet_ingress.subnet_id
 
   frontend_ip_configuration_type = "Public"
   backend_pool_ip_addresses      = [module.apim.private_ip_address]

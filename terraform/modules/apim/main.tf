@@ -13,3 +13,21 @@ resource "azurerm_api_management" "apim" {
   }
 
 }
+
+resource "azurerm_monitor_diagnostic_setting" "apim_diag" {
+  name                       = "${var.apim_name}-diagnostic"
+  target_resource_id         = azurerm_api_management.apim.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category = "GatewayLogs"
+  }
+
+  enabled_log {
+    category = "GatewayRequests"
+  }
+
+  enabled_metric {
+    category = "AllMetrics"
+  }
+}

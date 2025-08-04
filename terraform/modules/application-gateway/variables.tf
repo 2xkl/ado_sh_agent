@@ -13,6 +13,10 @@ variable "resource_group_name" {
   description = "Resource group name"
 }
 
+variable "log_analytics_workspace_id" {
+  type = string
+}
+
 variable "frontend_ip_configuration_type" {
   type        = string
   description = "Type of frontend IP configuration: Public or Private"

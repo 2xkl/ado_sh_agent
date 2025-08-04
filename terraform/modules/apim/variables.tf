@@ -11,3 +11,5 @@ variable "virtual_network_type" {
   default = "Internal" # jeśli chcesz APIM w VNet, np. "Internal" albo "External"
 }
 variable "subnet_id" {}
+
+variable "log_analytics_workspace_id" {}
