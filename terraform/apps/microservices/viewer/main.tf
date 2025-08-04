@@ -16,3 +16,9 @@ module "federation_viewer" {
   k8s_service_account = "viewer-sa"
   resource_group_name = var.resource_group_name
 }
+
+resource "azurerm_role_assignment" "storage_table_read" {
+  scope                = var.storage_id
+  role_definition_id   = "0a9a5a21-2e6e-4b1b-9c0c-123f14bb2ed4"  # Storage Table Data Reader
+  principal_id         = module.umi_viewer.principal_id
+}

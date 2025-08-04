@@ -102,7 +102,8 @@ resource "azurerm_key_vault_secret" "openai_key" {
 }
 
 module "servicebus" {
-  source              = "../modules/servicebus"
+  source = "../modules/servicebus"
+
   name                = "sb-apps-cust-dev"
   location            = var.location
   resource_group_name = module.rg.name
@@ -111,7 +112,8 @@ module "servicebus" {
 }
 
 module "inspector" {
-  source              = "./microservices/inspector"
+  source = "./microservices/inspector"
+
   location            = var.location
   resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -119,7 +121,8 @@ module "inspector" {
 }
 
 module "chat" {
-  source              = "./microservices/chat"
+  source = "./microservices/chat"
+
   location            = var.location
   resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -127,7 +130,8 @@ module "chat" {
 }
 
 module "publisher" {
-  source                     = "./microservices/publisher"
+  source = "./microservices/publisher"
+
   location                   = var.location
   resource_group_name        = module.rg.name
   oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -135,17 +139,20 @@ module "publisher" {
 }
 
 module "receiver" {
-  source                     = "./microservices/receiver"
+  source = "./microservices/receiver"
+
   location                   = var.location
   resource_group_name        = module.rg.name
   oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
   servicebus_subscription_id = module.servicebus.subscription_id
+  storage_id                 = module.storage.storage_id
 }
 
 module "viewer" {
-  source              = "./microservices/viewer"
+  source = "./microservices/viewer"
+
   location            = var.location
   resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-
+  storage_id          = module.storage.storage_id
 }

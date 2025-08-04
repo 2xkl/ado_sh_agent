@@ -11,3 +11,7 @@ variable "resource_group_name" {
 variable "oidc_issuer_url" {
   type = string
 }
+
+variable "storage_id" {
+  type = string
+}

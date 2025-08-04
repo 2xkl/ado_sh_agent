@@ -15,3 +15,7 @@ variable "oidc_issuer_url" {
 variable "servicebus_subscription_id" {
   type = string
 }
+
+variable "storage_id" {
+  type = string
+}
