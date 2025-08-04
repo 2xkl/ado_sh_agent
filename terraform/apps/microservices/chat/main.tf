@@ -17,19 +17,18 @@ module "federation_chat" {
   resource_group_name = var.resource_group_name
 }
 
-module "kv_access_policies" {
+module "kv_access_policy" {
   source = "../../../modules/key-vault-access-policies"
 
-  key_vault_id = var.key_vault_id
+  key_vault_id  = var.key_vault_id
 
-  access_policies = [
-    {
-      tenant_id               = data.azurerm_client_config.current.tenant_id
-      object_id               = module.umi_chat.principal_id
-      secret_permissions      = ["Get", "List"]
-      key_permissions         = []
-      certificate_permissions = []
-      storage_permissions     = []
-    }
-  ]
+  access_policy = {
+    tenant_id               = data.azurerm_client_config.current.tenant_id
+    object_id               = module.umi_chat.principal_id
+    secret_permissions      = ["Get", "List"]
+    key_permissions         = []
+    certificate_permissions = []
+    storage_permissions     = []
+  }
 }
+
