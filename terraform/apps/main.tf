@@ -69,12 +69,12 @@ module "storage_private_endpoint" {
   resource_group_name = "z-rg-network-dev"
   subnet_id           = data.azurerm_subnet.private.id
   resource_id         = module.storage.storage_id
-  subresource_names   = ["blob"]
+  subresource_names   = ["table"]
 }
 
 resource "azurerm_private_dns_a_record" "storage" {
-  name                = module.storage.name
-  zone_name           = "privatelink.vaultcore.azure.net"
+  name                = "storappsdevasd213"
+  zone_name           = "privatelink.table.core.windows.net"
   resource_group_name = "z-rg-network-dev"
 
   ttl     = 10
