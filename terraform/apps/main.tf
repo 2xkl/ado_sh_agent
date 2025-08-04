@@ -88,7 +88,7 @@ module "servicebus" {
   source              = "../modules/servicebus"
   name                = "sb-apps-cust-dev"
   location            = var.location
-  resource_group_name = module.rg_shared.name
+  resource_group_name = module.rg.name
   topic_name          = "events"
   subscription_name   = "mails"
 }
