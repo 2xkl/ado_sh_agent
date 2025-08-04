@@ -72,7 +72,7 @@ module "storage_private_endpoint" {
   subresource_names   = ["blob"]
 }
 
-resource "azurerm_private_dns_a_record" "keyvault" {
+resource "azurerm_private_dns_a_record" "storage" {
   name                = module.storage.name
   zone_name           = "privatelink.vaultcore.azure.net"
   resource_group_name = "z-rg-network-dev"
