@@ -45,7 +45,7 @@ resource "azurerm_private_dns_a_record" "keyvault" {
   resource_group_name = "z-rg-network-dev"
 
   ttl     = 300
-  records = [module.pe_keyvault.private_ip_address]
+  records = [module.kv_private_endpoint.private_ip_address]
 }
 
 
