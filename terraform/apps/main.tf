@@ -23,6 +23,42 @@ module "key_vault" {
   resource_group_name = module.rg.name
 }
 
+data "azurerm_subnet" "private" {
+  name                 = "aks-subnet"
+  virtual_network_name = "aks-vnet"
+  resource_group_name  = "z-rg-network-dev"
+}
+
+module "kv_private_endpoint" {
+  source              = "../modules/private-endpoint"
+  name                = "kv"
+  location            = var.location
+  resource_group_name = module.rg.name
+  subnet_id           = data.azurerm_subnet.private.id
+  resource_id         = module.key_vault.id
+  subresource_names   = ["vault"]
+}
+
+resource "azurerm_private_dns_a_record" "keyvault" {
+  name                = "z-kv-apps-dev"
+  zone_name           = "privatelink.vaultcore.azure.net"
+  resource_group_name = "z-rg-network-dev"
+
+  ttl     = 300
+  records = [module.pe_keyvault.private_ip_address] # IP z Private Endpointu
+}
+
+
+# module "storage_private_endpoint" {
+#   source              = "../modules/private-endpoint"
+#   name                = "storage"
+#   location            = var.location
+#   resource_group_name = module.rg.name
+#   subnet_id           = module.vnet.subnets["private"].id
+#   resource_id         = module.storage_account.id
+#   subresource_names   = ["blob"]
+# }
+
 module "azure_open_ai" {
   source = "../modules/azure-openai"
 
