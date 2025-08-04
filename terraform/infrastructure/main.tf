@@ -423,7 +423,7 @@ module "umi" {
 resource "azurerm_role_assignment" "umi_acr_pull" {
   scope                = module.acr.acr_id
   role_definition_name = "AcrPull"
-  principal_id         = module.umi.principal_id
+  principal_id         = module.aks.aks_identity
 }
 
 module "aks" {
@@ -439,6 +439,7 @@ module "aks" {
 
   user_managed_identity_id = module.umi.umi_id
 }
+
 
 # module "network_contributor_role" {
 #   source       = "../modules/role-assignment"

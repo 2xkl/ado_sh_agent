@@ -55,18 +55,3 @@ stages:
               ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
               ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
               ARM_TENANT_ID: $(ARMTENANTID)
-
-          # - task: Bash@3
-          #   displayName: "Terraform Destroy"
-          #   condition: and(succeeded(), eq('${{ parameters.runDestroy }}', true))
-          #   inputs:
-          #     targetType: "inline"
-          #     workingDirectory: terraform/infrastructure
-          #     script: |
-          #       terraform destroy common-tfplan
-          #   env:
-          #     ARM_ACCESS_KEY: $(ARMACCESSKEY)
-          #     ARM_CLIENT_ID: $(ARMCLIENTID)
-          #     ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
-          #     ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
-          #     ARM_TENANT_ID: $(ARMTENANTID)
