@@ -25,6 +25,6 @@ resource "azurerm_role_assignment" "receiver_receive" {
 
 resource "azurerm_role_assignment" "storage_table_write" {
   scope                = var.storage_id
-  role_definition_id   = "0a9a5a21-2e6e-4b1b-9c0c-123f14bb2ed3"  # Storage Table Data Contributor
+  role_definition_name = "Storage Table Data Contributor"
   principal_id         = module.umi_receiver.principal_id
 }
