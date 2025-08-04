@@ -8,7 +8,7 @@ data "azurerm_kubernetes_cluster" "aks" {
 module "rg" {
   source = "../modules/resource-group"
 
-  name     = module.rg.name
+  name     = var.resource_group_name
   location = var.location
 }
 
