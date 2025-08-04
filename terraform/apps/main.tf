@@ -112,18 +112,24 @@ module "publisher" {
   source              = "./microservices/publisher"
   location            = var.location
   resource_group_name = module.rg.name
+  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+
 }
 
 module "receiver" {
   source              = "./microservices/receiver"
   location            = var.location
   resource_group_name = module.rg.name
+  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+
 }
 
 module "viewer" {
   source              = "./microservices/viewer"
   location            = var.location
   resource_group_name = module.rg.name
+  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+
 }
 
 
