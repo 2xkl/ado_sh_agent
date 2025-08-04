@@ -131,15 +131,4 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_diag" {
     category = "AllMetrics"
   }
 
-  enabled_log {
-    category = "ApplicationGatewayAccessLog"
-  }
-
-  enabled_log {
-    category = "ApplicationGatewayPerformanceLog"
-  }
-
-  enabled_log {
-    category = "ApplicationGatewayFirewallLog"
-  }
 }
