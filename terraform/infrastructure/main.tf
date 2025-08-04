@@ -440,13 +440,6 @@ module "aks" {
   user_managed_identity_id = module.umi.umi_id
 }
 
-
-# module "network_contributor_role" {
-#   source       = "../modules/role-assignment"
-#   scope        = module.subnet_aks.subnet_id
-#   principal_id = module.umi.umi_id
-# }
-
 module "rg_ingress" {
   source = "../modules/resource-group"
 
@@ -496,7 +489,6 @@ resource "azurerm_api_management_logger" "appinsights" {
   name                = "appinsights-logger"
   api_management_name = module.apim.apim_name
   resource_group_name = module.rg_ingress.name
-  # logger_type         = "applicationInsights"
 
   application_insights {
     instrumentation_key = module.app_insights.instrumentation_key

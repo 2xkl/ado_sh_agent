@@ -1,5 +1,10 @@
 data "azurerm_client_config" "current" {}
 
+data "azurerm_kubernetes_cluster" "aks" {
+  name                = "akscluster"
+  resource_group_name = "z-rg-aks-dev"
+}
+
 module "rg" {
   source = "../modules/resource-group"
 
@@ -79,21 +84,13 @@ resource "azurerm_key_vault_secret" "openai_key" {
   key_vault_id = module.key_vault.id
 }
 
-# module "servicebus" {
-#   source              = "../modules/servicebus"
-#   name                = "sb-apps-dev"
-#   location            = var.location
-#   resource_group_name = module.rg_shared.name
-#   topic_name          = "events"
-#   subscription_name   = "inspector"
-# }
-
-# rg_shared = "z-rg-shared-dev"
-# acr_name  = "zrgsharedacr001dev"
-
-data "azurerm_kubernetes_cluster" "aks" {
-  name                = "akscluster"
-  resource_group_name = "z-rg-aks-dev"
+module "servicebus" {
+  source              = "../modules/servicebus"
+  name                = "sb-apps-cust-dev"
+  location            = var.location
+  resource_group_name = module.rg_shared.name
+  topic_name          = "events"
+  subscription_name   = "mails"
 }
 
 module "umi_inspector" {
