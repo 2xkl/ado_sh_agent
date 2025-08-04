@@ -144,7 +144,7 @@ module "receiver" {
   location                   = var.location
   resource_group_name        = module.rg.name
   oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-  servicebus_subscription_id = module.servicebus.subscription_id
+  servicebus_subscription_id = module.servicebus.topic_id
   storage_id                 = module.storage.storage_id
 }
 
