@@ -1,20 +1,3 @@
-# apiVersion: "aadpodidentity.k8s.io/v1"
-# kind: AzureIdentity
-# metadata:
-#   name: inspector-identity
-# spec:
-#   type: 1
-#   resourceID: /subscriptions/315e574e-7153-4853-8cfe-fa416bb08a23/resourceGroups/z-rg-apps-dev/providers/Microsoft.ManagedIdentity/userAssignedIdentities/umi-inspector
-#   clientID: b4cb02d6-e438-4f74-aa83-9897aef121ae
-# ---
-# apiVersion: "aadpodidentity.k8s.io/v1"
-# kind: AzureIdentityBinding
-# metadata:
-#   name: inspector-identity-binding
-# spec:
-#   azureIdentity: inspector-identity
-#   selector: inspector-sa
-# ---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -28,37 +11,40 @@ metadata:
   annotations:
     azure.workload.identity/client-id: "b4cb02d6-e438-4f74-aa83-9897aef121ae"
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: inspector
   namespace: inspector
   labels:
     app: inspector
+    azure.workload.identity/use: "true"
 spec:
-  replicas: 1
+  serviceAccountName: inspector-sa
+  imagePullSecrets:
+    - name: acr-secret
+  containers:
+    - name: inspector
+      image: zrgsharedacr001dev.azurecr.io/inspector:220
+      ports:
+        - containerPort: 8000
+      env:
+        - name: AZURE_KEYVAULT_NAME
+          value: "z-kv-apps-dev"
+        - name: AZURE_OPENAI_DEPLOYMENT
+          value: "gpt-35-turbo"
+        - name: AZURE_OPENAI_API_VERSION
+          value: "2024-05-01-preview"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inspector
+  namespace: inspector
+spec:
   selector:
-    matchLabels:
-      app: inspector
-  template:
-    metadata:
-      labels:
-        app: inspector
-      annotations:
-        azure.workload.identity/use: "true" 
-    spec:
-      serviceAccountName: inspector-sa
-      imagePullSecrets:
-        - name: acr-secret
-      containers:
-        - name: inspector
-          image: zrgsharedacr001dev.azurecr.io/inspector:220
-          ports:
-            - containerPort: 8000
-          env:
-            - name: AZURE_KEYVAULT_NAME
-              value: "z-kv-apps-dev"
-            - name: AZURE_OPENAI_DEPLOYMENT
-              value: "gpt-35-turbo"
-            - name: AZURE_OPENAI_API_VERSION
-              value: "2024-05-01-preview"
+    app: inspector
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

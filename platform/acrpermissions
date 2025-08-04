@@ -6,8 +6,65 @@ aks_managed_identity = "z-umi-aks-dev"
 rg_shared = "z-rg-shared-dev"
 acr_name  = "zrgsharedacr001dev"
 
-kubectl create secret docker-registry acr-secret \
-  --docker-server=zrgsharedacr001dev.azurecr.io \
-  --docker-username=zrgsharedacr001dev \
-  --docker-password=H4LOa6uNhNseMfhFPM9rDver2QeLNk3h9vDZlJ86hR+ACRAIgDJX\
-  --docker-email=test@test.test
+
+
+  export AKS_OIDC_ISSUER="$(az aks show --name "akscluster" \
+    --resource-group "z-rg-aks-dev" \
+    --query "oidcIssuerProfile.issuerUrl" \
+    --output tsv)"
+
+
+    https://westeurope.oic.prod-aks.azure.com/16850073-4977-4869-9163-08e8d38eac81/a9b0a9f8-679a-44bf-99b6-0c1f4ebdf69e/
+
+
+    export SUBSCRIPTION="$(az account show --query id --output tsv)"
+
+export USER_ASSIGNED_IDENTITY_NAME="myIdentity$RANDOM_ID"
+
+
+    az identity create \
+    --name "inspector" \
+    --resource-group "z-rg-aks-dev" \
+    --location "westeurope" \
+    --subscription "315e574e-7153-4853-8cfe-fa416bb08a23"
+
+    export USER_ASSIGNED_CLIENT_ID="$(az identity show \
+    --resource-group "z-rg-aks-dev" \
+    --name "${USER_ASSIGNED_IDENTITY_NAME}" \
+    --query 'clientId' \
+    --output tsv)"
+
+{
+  "clientId": "15e5794e-0849-4d91-a9d0-a3c8b82e4f4d",
+  "id": "/subscriptions/315e574e-7153-4853-8cfe-fa416bb08a23/resourcegroups/z-rg-aks-dev/providers/Microsoft.ManagedIdentity/userAssignedIdentities/inspector",
+  "location": "westeurope",
+  "name": "inspector",
+  "principalId": "a6cc49da-78b7-43f8-b094-dae3ee9376ef",
+  "resourceGroup": "z-rg-aks-dev",
+  "systemData": null,
+  "tags": {},
+  "tenantId": "16850073-4977-4869-9163-08e8d38eac81",
+  "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+}
+
+
+export SERVICE_ACCOUNT_NAMESPACE="default"
+export SERVICE_ACCOUNT_NAME="workload-identity-sa$RANDOM_ID"
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    azure.workload.identity/client-id: "15e5794e-0849-4d91-a9d0-a3c8b82e4f4d"
+  name: "inspector-sa"
+  namespace: "inspector"
+EOF
+
+export FEDERATED_IDENTITY_CREDENTIAL_NAME="myFedIdentityss123"
+az identity federated-credential create \
+    --name ${FEDERATED_IDENTITY_CREDENTIAL_NAME} \
+    --identity-name "inspector" \
+    --resource-group "z-rg-aks-dev" \
+    --issuer "https://westeurope.oic.prod-aks.azure.com/16850073-4977-4869-9163-08e8d38eac81/a9b0a9f8-679a-44bf-99b6-0c1f4ebdf69e/" \
+    --subject system:serviceaccount:"inspector":"inspector-sa" \
+    --audience api://AzureADTokenExchange
