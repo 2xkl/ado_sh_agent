@@ -7,3 +7,7 @@ variable "resource_group_name" {
   description = "Name of the resource group"
   type        = string
 }
+
+variable "oidc_issuer_url" {
+  type = string
+}

@@ -11,7 +11,7 @@ module "federation_viewer" {
   source              = "../../../modules/federation"
   name                = "viewer"
   identity_id         = module.umi_viewer.umi_id
-  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  oidc_issuer_url     = var.oidc_issuer_url
   k8s_namespace       = "viewer"
   k8s_service_account = "viewer-sa"
   resource_group_name = var.resource_group_name
