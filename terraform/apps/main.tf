@@ -109,19 +109,19 @@ module "chat" {
 }
 
 module "publisher" {
-  source              = "./microservices/publisher"
-  location            = var.location
-  resource_group_name = module.rg.name
-  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-
+  source                     = "./microservices/publisher"
+  location                   = var.location
+  resource_group_name        = module.rg.name
+  oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  servicebus_subscription_id = module.servicebus.subscription_id
 }
 
 module "receiver" {
-  source              = "./microservices/receiver"
-  location            = var.location
-  resource_group_name = module.rg.name
-  oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
-
+  source                     = "./microservices/receiver"
+  location                   = var.location
+  resource_group_name        = module.rg.name
+  oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
+  servicebus_subscription_id = module.servicebus.subscription_id
 }
 
 module "viewer" {
@@ -131,30 +131,3 @@ module "viewer" {
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
 
 }
-
-
-# module "kv_access_policies" {
-#   source = "../modules/key-vault-access-policies"
-
-#   key_vault_id = module.key_vault.id
-
-#   access_policies = [
-#     {
-#       tenant_id               = data.azurerm_client_config.current.tenant_id
-#       object_id               = module.umi_inspector.principal_id
-#       secret_permissions      = ["Get", "List"]
-#       key_permissions         = []
-#       certificate_permissions = []
-#       storage_permissions     = []
-#     },
-#     {
-#       tenant_id               = data.azurerm_client_config.current.tenant_id
-#       object_id               = module.umi_chat.principal_id
-#       secret_permissions      = ["Get", "List"]
-#       key_permissions         = []
-#       certificate_permissions = []
-#       storage_permissions     = []
-#     }
-#   ]
-#   depends_on = [module.key_vault, module.umi_inspector, module.umi_chat]
-# }

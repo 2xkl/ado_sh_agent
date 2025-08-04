@@ -16,3 +16,9 @@ module "federation_publisher" {
   k8s_service_account = "publisher-sa"
   resource_group_name = var.resource_group_name
 }
+
+resource "azurerm_role_assignment" "publisher_send" {
+  scope                = var.servicebus_subscription_id
+  role_definition_name = "Azure Service Bus Data Sender"
+  principal_id         = module.umi_publisher.principal_id
+}

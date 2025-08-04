@@ -16,3 +16,9 @@ module "federation_receiver" {
   k8s_service_account = "receiver-sa"
   resource_group_name = var.resource_group_name
 }
+
+resource "azurerm_role_assignment" "receiver_receive" {
+  scope                = var.servicebus_subscription_id
+  role_definition_name = "Azure Service Bus Data Receiver"
+  principal_id         = module.umi_receiver.principal_id
+}
