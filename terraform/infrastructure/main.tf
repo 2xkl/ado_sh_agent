@@ -86,7 +86,7 @@ module "subnet_ingress" {
 
 module "subnet_pe" {
   source              = "../modules/subnet"
-  subnet_name         = "ingress-subnet"
+  subnet_name         = "pe-subnet"
   address_prefixes    = var.range_subnet_pe
   vnet_name           = module.vnet_aks.vnet_name
   resource_group_name = module.rg_network.name

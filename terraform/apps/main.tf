@@ -24,7 +24,7 @@ module "key_vault" {
 }
 
 data "azurerm_subnet" "private" {
-  name                 = "aks-subnet"
+  name                 = "pe-subnet"
   virtual_network_name = "aks-vnet"
   resource_group_name  = "z-rg-network-dev"
 }
