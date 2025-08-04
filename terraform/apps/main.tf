@@ -40,12 +40,12 @@ module "kv_private_endpoint" {
 }
 
 resource "azurerm_private_dns_a_record" "keyvault" {
-  name                = "z-kv-apps-dev"
+  name                = var.kv_name
   zone_name           = "privatelink.vaultcore.azure.net"
   resource_group_name = "z-rg-network-dev"
 
   ttl     = 300
-  records = [module.pe_keyvault.private_ip_address] # IP z Private Endpointu
+  records = [module.pe_keyvault.private_ip_address]
 }
 
 
