@@ -1,35 +1,20 @@
-data "azurerm_client_config" "current" {}
-
-module "umi_inspector" {
-  source                = "../../../modules/umi"
-  user_managed_identity = "umi-inspector"
-  location              = var.location
-  resource_group_name   = var.resource_group_name
-}
-
-module "federation_inspector" {
-  source              = "../../../modules/federation"
-  name                = "inspector"
-  identity_id         = module.umi_inspector.umi_id
-  oidc_issuer_url     = var.oidc_issuer_url
-  k8s_namespace       = "inspector"
-  k8s_service_account = "inspector-sa"
-  resource_group_name = var.resource_group_name
-}
-
-module "kv_access_policies" {
-  source = "../../../modules/key-vault-access-policies"
-
+resource "azurerm_key_vault_access_policy" "this" {
   key_vault_id = var.key_vault_id
 
-  access_policies = [
-    {
-      tenant_id               = data.azurerm_client_config.current.tenant_id
-      object_id               = module.umi_inspector.principal_id
-      secret_permissions      = ["Get", "List"]
-      key_permissions         = []
-      certificate_permissions = []
-      storage_permissions     = []
-    }
-  ]
+  tenant_id = var.access_policy.tenant_id
+  object_id = var.access_policy.object_id
+
+  secret_permissions      = var.access_policy.secret_permissions
+  key_permissions         = var.access_policy.key_permissions
+  certificate_permissions = var.access_policy.certificate_permissions
+  storage_permissions     = var.access_policy.storage_permissions
+
+  lifecycle {
+    ignore_changes = [
+      secret_permissions,
+      key_permissions,
+      certificate_permissions,
+      storage_permissions,
+    ]
+  }
 }
