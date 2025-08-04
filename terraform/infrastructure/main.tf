@@ -46,6 +46,20 @@ module "vnet_aks" {
   resource_group_name = module.rg_network.name
 }
 
+module "private_dns_kv" {
+  source              = "../modules/private-dns-zone"
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = module.rg_network.name
+  virtual_network_id  = module.vnet_aks.id
+}
+
+module "private_dns_blob" {
+  source              = "../modules/private-dns-zone"
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = module.rg_network.name
+  virtual_network_id  = module.vnet_aks.id
+}
+
 module "subnet_aks" {
   source              = "../modules/subnet"
   subnet_name         = "aks-subnet"
