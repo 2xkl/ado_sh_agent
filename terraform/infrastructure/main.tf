@@ -53,9 +53,9 @@ module "private_dns_kv" {
   virtual_network_id  = module.vnet_aks.vnet_id
 }
 
-module "private_dns_blob" {
+module "private_dns_table" {
   source              = "../modules/private-dns-zone"
-  name                = "privatelink.blob.core.windows.net"
+  name                = "privatelink.table.core.windows.net"
   resource_group_name = module.rg_network.name
   virtual_network_id  = module.vnet_aks.vnet_id
 }
