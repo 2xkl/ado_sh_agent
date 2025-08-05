@@ -9,10 +9,6 @@ parameters:
     displayName: "Run Terraform Apply?"
     type: boolean
     default: false
-  - name: runDestroy
-    displayName: "Run Terraform Destroy?"
-    type: boolean
-    default: false
 
 variables:
   - group: SEC_MS
