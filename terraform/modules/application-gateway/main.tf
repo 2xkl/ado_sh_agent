@@ -42,7 +42,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   backend_address_pool {
     name         = "API"
-    ip_addresses = ["10.1.2.4"]
+    ip_addresses = var.backend_pool_ip_addresses
   }
 
   backend_address_pool {
