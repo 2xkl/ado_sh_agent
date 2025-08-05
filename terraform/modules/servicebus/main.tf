@@ -9,7 +9,6 @@ resource "azurerm_servicebus_namespace" "this" {
 resource "azurerm_servicebus_topic" "default" {
   name                = var.topic_name
   namespace_id        = azurerm_servicebus_namespace.this.id
-#   enable_partitioning = true
 }
 
 resource "azurerm_servicebus_subscription" "default" {

@@ -8,7 +8,7 @@ variable "publisher_email" {
   default = "admin@yourcompany.com"
 }
 variable "virtual_network_type" {
-  default = "Internal" # jeśli chcesz APIM w VNet, np. "Internal" albo "External"
+  default = "Internal"
 }
 variable "subnet_id" {}
 

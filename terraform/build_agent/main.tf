@@ -13,14 +13,14 @@ module "umi" {
   depends_on            = [module.rg]
 }
 
-module "storage_account" {
-  source = "../modules/storage-account"
+# module "storage_account" {
+#   source = "../modules/storage-account"
 
-  storage_account_name = var.storage_account_name
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  depends_on           = [module.rg]
-}
+#   storage_account_name = var.storage_account_name
+#   location             = var.location
+#   resource_group_name  = var.resource_group_name
+#   depends_on           = [module.rg]
+# }
 
 module "vnet" {
   source              = "../modules/vnet"
@@ -100,8 +100,8 @@ module "vm" {
   primary_blob_endpoint    = module.storage_account.primary_blob_endpoint
   user_assigned_managed_id = module.umi.umi_id
   zone                     = var.vm_config.vmAvailabilityZone
-  admin_password           = "Kurkam33Kurkam33"
-  admin_username           = "kurkam"
+  admin_password           = ""
+  admin_username           = ""
   location                 = var.location
   resource_group_name      = var.resource_group_name
 
