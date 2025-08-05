@@ -163,18 +163,6 @@ module "aks_nsg" {
   ]
 }
 
-    # {
-    #   name                       = "AllowAppGwToAPIMDynamicPorts"
-    #   priority                   = 120
-    #   direction                  = "Inbound"
-    #   access                     = "Allow"
-    #   protocol                   = "Tcp"
-    #   source_port_range          = "*"
-    #   destination_port_range     = "65200-65535"
-    #   source_address_prefix      = "192.168.60.32/27"
-    #   destination_address_prefix = "VirtualNetwork"
-    # },
-
 resource "azurerm_subnet_network_security_group_association" "aks_assoc" {
   subnet_id                 = module.subnet_aks.subnet_id
   network_security_group_id = module.aks_nsg.nsg_id
