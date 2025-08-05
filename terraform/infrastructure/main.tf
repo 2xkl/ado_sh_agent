@@ -150,6 +150,17 @@ module "aks_nsg" {
       destination_address_prefix = "VirtualNetwork"
     },
     {
+      name                       = "AllowAPIMtoAKS"
+      priority                   = 111
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "192.168.60.0/27"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
       name                       = "DenyAllInbound"
       priority                   = 200
       direction                  = "Inbound"
