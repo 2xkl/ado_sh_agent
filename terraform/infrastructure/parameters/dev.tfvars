@@ -29,5 +29,5 @@ aks_cluster_name = "akscluster"
 
 #INGRESS
 rg_ingress = "z-rg-ingress-dev"
-apim_name  = "apim-custpm-onfghs"
+apim_name  = "apim-custyym-onfghs"
 application_gateway_name = "appgw"
