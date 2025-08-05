@@ -1,16 +1,12 @@
 environment = "dev"
 location    = "westeurope"
 
-rg_network = "z-rg-network-dev"
-# range_vnet           = ["10.1.0.0/16"]
-# range_subnet_aks     = ["10.1.1.0/24"]
-# range_subnet_apim    = ["10.1.2.0/24"]
-# range_subnet_ingress = ["10.1.3.0/24"]
-# range_subnet_pe      = ["10.1.4.0/24"]
-
 #SHARED
 rg_shared = "z-rg-shared-dev"
 acr_name  = "zrgsharedacr001dev"
+
+#NETWORK
+rg_network = "z-rg-network-dev"
 
 vnet_ingress_name  = "ingress-vnet"
 range_vnet_ingress = ["192.168.60.0/24"]
