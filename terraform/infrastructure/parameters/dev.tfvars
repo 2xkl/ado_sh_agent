@@ -27,5 +27,7 @@ rg_aks_node          = "z-rg-aksnode-dev"
 aks_managed_identity = "z-umi-aks-dev"
 aks_cluster_name = "akscluster"
 
+#INGRESS
 rg_ingress = "z-rg-ingress-dev"
-apim_name  = "apim-custom-onfghs"
+apim_name  = "apim-custpm-onfghs"
+application_gateway_name = "appgw"

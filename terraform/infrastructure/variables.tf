@@ -77,3 +77,7 @@ variable "apim_name" {
 variable "aks_managed_identity" {
   type = string
 }
+
+variable "application_gateway_name" {
+  type = string
+}
