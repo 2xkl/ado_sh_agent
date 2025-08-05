@@ -4,9 +4,9 @@ SP_USERNAME=""
 SP_PASSWORD=""
 TENANT_ID=""
 
-RESOURCE_GROUP_NAME="z-buildagent-rg"
+RESOURCE_GROUP_NAME="z-rg-state"
 LOCATION="westeurope"
-STORAGE_ACCOUNT_NAME="devops123123"
+STORAGE_ACCOUNT_NAME="zsastateadokrkm"
 CONTAINER_NAME="tfstate"
 
 az login --service-principal \

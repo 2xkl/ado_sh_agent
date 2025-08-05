@@ -4,7 +4,7 @@ location            = "westeurope"
 #RESOURCES
 aoi_name = "z-aoi-apps-f-dev"
 swa_name = "z-swa-apps-dev"
-kv_name  = "z-kv-apps-vd-dev"
+kv_name  = "z-kv-apps-vkrd-dev"
 sa_name  = "storrandocuas2"
 sb_name  = "sb-apps-cust-dev"
 
