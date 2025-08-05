@@ -14,6 +14,18 @@ variable "rg_aks_node" {
   type = string
 }
 
+variable "vnet_ingress_name" {
+  type = string
+}
+
+variable "vnet_aks_name" {
+  type = string
+}
+
+variable "vnet_endpoints_name" {
+  type = string
+}
+
 variable "rg_ingress" {
   type = string
 }

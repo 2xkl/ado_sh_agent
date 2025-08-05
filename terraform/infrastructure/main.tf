@@ -42,7 +42,7 @@ module "rg_network" {
 
 module "vnet_ingress" {
   source              = "../modules/vnet"
-  vnet_name           = "ingress-vnet"
+  vnet_name           = var.vnet_ingress_name
   address_space       = var.range_vnet_ingress
   location            = var.location
   resource_group_name = module.rg_network.name
@@ -66,7 +66,7 @@ module "subnet_agw" {
 
 module "vnet_aks" {
   source              = "../modules/vnet"
-  vnet_name           = "aks-vnet"
+  vnet_name           = var.vnet_aks_name
   address_space       = var.range_vnet_aks
   location            = var.location
   resource_group_name = module.rg_network.name
@@ -96,7 +96,7 @@ module "private_dns_table" {
 
 module "vnet_endpoints" {
   source              = "../modules/vnet"
-  vnet_name           = "endpoints-vnet"
+  vnet_name           = var.vnet_endpoints_name
   address_space       = var.range_vnet_endpoints
   location            = var.location
   resource_group_name = module.rg_network.name
@@ -109,6 +109,29 @@ module "subnet_pe" {
   vnet_name           = module.vnet_endpoints.vnet_name
   resource_group_name = module.rg_network.name
 }
+
+module "peering_ingress_aks" {
+  source           = "../modules/vnet-peering"
+  name_prefix      = "ingress"
+  source_rg        = module.rg_network.name
+  source_vnet_name = var.vnet_ingress_name
+  source_vnet_id   = module.vnet_ingress.vnet_id
+  target_rg        = module.rg_network.name
+  target_vnet_name = var.vnet_aks_name
+  target_vnet_id   = module.vnet_aks.vnet_id
+}
+
+module "peering_aks_endpoints" {
+  source           = "../modules/vnet-peering"
+  name_prefix      = "aks"
+  source_rg        = module.rg_network.name
+  source_vnet_name = var.vnet_aks_name
+  source_vnet_id   = module.vnet_aks.vnet_id
+  target_rg        = module.rg_network.name
+  target_vnet_name = var.vnet_endpoints_name
+  target_vnet_id   = module.vnet_endpoints.vnet_id
+}
+
 
 
 # module "aks_nsg" {
