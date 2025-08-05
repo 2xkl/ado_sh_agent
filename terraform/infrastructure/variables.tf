@@ -22,11 +22,7 @@ variable "location" {
   type = string
 }
 
-variable "range_vnet" {
-  type = list(string)
-}
-
-variable "range_subnet_aks" {
+variable "range_vnet_ingress" {
   type = list(string)
 }
 
@@ -34,7 +30,23 @@ variable "range_subnet_apim" {
   type = list(string)
 }
 
-variable "range_subnet_ingress" {
+variable "range_subnet_agw" {
+  type = list(string)
+}
+
+variable "range_vnet_aks" {
+  type = list(string)
+}
+
+variable "range_subnet_aks" {
+  type = list(string)
+}
+
+variable "range_vnet_endpoints" {
+  type = list(string)
+}
+
+variable "range_subnet_pe" {
   type = list(string)
 }
 
