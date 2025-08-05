@@ -341,7 +341,7 @@ module "app_gateway" {
   log_analytics_workspace_id = module.log_analytics.workspace_id
   apim_name                  = var.apim_name
   app_gateway_name           = var.application_gateway_name
-  subnet_id                  = module.subnet_ingress.subnet_id
+  subnet_id                  = module.subnet_apim.subnet_id
 
   frontend_ip_configuration_type = "Public"
   backend_pool_ip_addresses      = [module.apim.private_ip_address]
