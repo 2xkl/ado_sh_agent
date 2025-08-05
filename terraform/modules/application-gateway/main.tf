@@ -121,18 +121,3 @@ resource "azurerm_application_gateway" "appgw" {
     priority           = 11
   }
 }
-
-# resource "azurerm_monitor_diagnostic_setting" "appgw_diag" {
-#   name                       = "${var.app_gateway_name}-diagnostic"
-#   target_resource_id         = azurerm_application_gateway.appgw.id
-#   log_analytics_workspace_id = var.log_analytics_workspace_id
-
-#   enabled_metric {
-#     category = "AllMetrics"
-#   }
-
-#   enabled_log {
-#     category_group = "allLogs"
-#   }
-
-# }
