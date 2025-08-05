@@ -139,26 +139,15 @@ module "aks_nsg" {
   resource_group_name = module.rg_network.name
   security_rules = [
     {
-      name                       = "AllowAPIMtoAKS"
-      priority                   = 110
+      name                       = "AllowAllFromIngress"
+      priority                   = 100
       direction                  = "Inbound"
       access                     = "Allow"
-      protocol                   = "Tcp"
+      protocol                   = "*"
       source_port_range          = "*"
-      destination_port_range     = "80"
-      source_address_prefix      = "192.168.60.0/27"
-      destination_address_prefix = "192.168.61.0/24"
-    },
-    {
-      name                       = "AllowAPIMtoAKSHttps"
-      priority                   = 111
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "443"
-      source_address_prefix      = "192.168.60.0/27"
-      destination_address_prefix = "192.168.61.0/24"
+      destination_port_range     = "*"
+      source_address_prefix      = "192.168.60.0/24"
+      destination_address_prefix = "*"
     },
     {
       name                       = "DenyAllInbound"
