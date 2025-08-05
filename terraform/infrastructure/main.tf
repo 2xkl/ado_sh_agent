@@ -273,39 +273,39 @@ resource "azurerm_subnet_network_security_group_association" "apim_assoc" {
   network_security_group_id = module.apim_nsg.nsg_id
 }
 
-# module "rg_aks" {
-#   source = "../modules/resource-group"
+#AKS
+module "rg_aks" {
+  source   = "../modules/resource-group"
+  name     = var.rg_aks
+  location = var.location
+}
 
-#   name     = var.rg_aks
-#   location = var.location
-# }
+module "umi" {
+  source                = "../modules/umi"
+  user_managed_identity = var.aks_managed_identity
+  location              = var.location
+  resource_group_name   = module.rg_aks.name
+}
 
-# module "umi" {
-#   source                = "../modules/umi"
-#   user_managed_identity = var.aks_managed_identity
-#   location              = var.location
-#   resource_group_name   = module.rg_aks.name
-# }
+resource "azurerm_role_assignment" "umi_acr_pull" {
+  scope                = module.acr.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = module.aks.aks_identity
+}
 
-# resource "azurerm_role_assignment" "umi_acr_pull" {
-#   scope                = module.acr.acr_id
-#   role_definition_name = "AcrPull"
-#   principal_id         = module.aks.aks_identity
-# }
+module "aks" {
+  source                   = "../modules/aks"
+  resource_group_name      = module.rg_aks.name
+  resource_group_node_name = var.rg_aks_node
+  location                 = var.location
+  aks_cluster_name         = var.aks_cluster_name
+  dns_prefix               = "${var.aks_cluster_name}er001"
+  node_count               = 1
+  node_vm_size             = "Standard_DS2_v2"
+  vnet_subnet_id           = module.subnet_aks.subnet_id
 
-# module "aks" {
-#   source                   = "../modules/aks"
-#   resource_group_name      = module.rg_aks.name
-#   resource_group_node_name = var.rg_aks_node
-#   location                 = var.location
-#   aks_cluster_name         = "akscluster"
-#   dns_prefix               = "zakscluster001"
-#   node_count               = 1
-#   node_vm_size             = "Standard_DS2_v2"
-#   vnet_subnet_id           = module.subnet_aks.subnet_id
-
-#   user_managed_identity_id = module.umi.umi_id
-# }
+  user_managed_identity_id = module.umi.umi_id
+}
 
 # module "rg_ingress" {
 #   source = "../modules/resource-group"

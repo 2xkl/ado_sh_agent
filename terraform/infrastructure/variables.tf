@@ -66,6 +66,10 @@ variable "acr_name" {
   type = string
 }
 
+variable "aks_cluster_name" {
+  type = string
+}
+
 variable "apim_name" {
   type = string
 }
