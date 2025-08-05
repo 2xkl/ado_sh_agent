@@ -2,9 +2,9 @@ resource_group_name = "z-rg-apps-dev"
 location            = "westeurope"
 
 #RESOURCES
-aoi_name = "z-aoi-apps-dev"
+aoi_name = "z-aoi-apps-f-dev"
 swa_name = "z-swa-apps-dev"
-kv_name  = "z-kv-apps-dd-dev"
+kv_name  = "z-kv-apps-vd-dev"
 sa_name  = "storrandocuas2"
 sb_name  = "sb-apps-cust-dev"
 
