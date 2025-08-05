@@ -362,6 +362,7 @@ module "app_gateway" {
   sku_capacity  = 2
 
   rewrite_host = "${var.apim_name}.azure-api.net"
+  depends_on   = [module.apim_nsg]
 }
 
 resource "azurerm_api_management_logger" "appinsights" {
