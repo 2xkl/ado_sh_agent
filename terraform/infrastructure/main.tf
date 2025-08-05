@@ -163,6 +163,18 @@ module "aks_nsg" {
   ]
 }
 
+    # {
+    #   name                       = "AllowAppGwToAPIMDynamicPorts"
+    #   priority                   = 120
+    #   direction                  = "Inbound"
+    #   access                     = "Allow"
+    #   protocol                   = "Tcp"
+    #   source_port_range          = "*"
+    #   destination_port_range     = "65200-65535"
+    #   source_address_prefix      = "192.168.60.32/27"
+    #   destination_address_prefix = "VirtualNetwork"
+    # },
+
 resource "azurerm_subnet_network_security_group_association" "aks_assoc" {
   subnet_id                 = module.subnet_aks.subnet_id
   network_security_group_id = module.aks_nsg.nsg_id
@@ -241,17 +253,6 @@ module "apim_nsg" {
       source_port_range          = "*"
       destination_port_range     = "*"
       source_address_prefix      = "AzureLoadBalancer"
-      destination_address_prefix = "VirtualNetwork"
-    },
-    {
-      name                       = "AllowAppGwToAPIMDynamicPorts"
-      priority                   = 120
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "65200-65535"
-      source_address_prefix      = "192.168.60.32/27"
       destination_address_prefix = "VirtualNetwork"
     },
     {
@@ -352,7 +353,7 @@ module "app_gateway" {
   log_analytics_workspace_id = module.log_analytics.workspace_id
   apim_name                  = var.apim_name
   app_gateway_name           = var.application_gateway_name
-  subnet_id                  = module.subnet_apim.subnet_id
+  subnet_id                  = module.subnet_agw.subnet_id
 
   frontend_ip_configuration_type = "Public"
   backend_pool_ip_addresses      = [module.apim.private_ip_address]
