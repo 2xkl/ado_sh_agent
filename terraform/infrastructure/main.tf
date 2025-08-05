@@ -168,6 +168,42 @@ resource "azurerm_subnet_network_security_group_association" "aks_assoc" {
   network_security_group_id = module.aks_nsg.nsg_id
 }
 
+module "endpoints_nsg" {
+  source              = "../modules/nsg"
+  nsg_name            = "${module.subnet_pe.name}-nsg"
+  location            = var.location
+  resource_group_name = module.rg_network.name
+  security_rules = [
+    {
+      name                       = "AllowAKStoEndpoints"
+      priority                   = 110
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = "192.168.61.0/27"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "DenyAllInbound"
+      priority                   = 200
+      direction                  = "Inbound"
+      access                     = "Deny"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    }
+  ]
+}
+
+resource "azurerm_subnet_network_security_group_association" "pe_assoc" {
+  subnet_id                 = module.subnet_pe.subnet_id
+  network_security_group_id = module.endpoints_nsg.nsg_id
+}
+
 # module "apim_nsg" {
 #   source              = "../modules/nsg"
 #   nsg_name            = "apim-subnet-nsg"
