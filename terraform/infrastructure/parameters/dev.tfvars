@@ -14,7 +14,7 @@ acr_name  = "zrgsharedacr001dev"
 
 range_vnet_ingress = ["192.168.60.0/24"]
 range_subnet_apim  = ["192.168.60.0/27"]
-range_subnet_agw   = ["192.168.60.0/27"]
+range_subnet_agw   = ["192.168.60.32/27"]
 
 range_vnet_aks   = ["192.168.61.0/24"]
 range_subnet_aks = ["192.168.61.0/24"]
