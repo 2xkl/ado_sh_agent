@@ -4,15 +4,15 @@ SP_USERNAME=""
 SP_PASSWORD=""
 TENANT_ID=""
 
-RESOURCE_GROUP_NAME="z-rg-state"
-LOCATION="westeurope"
-STORAGE_ACCOUNT_NAME="zsastateadokrkm"
-CONTAINER_NAME="tfstate"
-
 az login --service-principal \
   --username "$SP_USERNAME" \
   --password "$SP_PASSWORD" \
   --tenant "$TENANT_ID"
+
+RESOURCE_GROUP_NAME="z-rg-state"
+LOCATION="westeurope"
+STORAGE_ACCOUNT_NAME="zsastateadokrkm"
+CONTAINER_NAME="tfstate"
 
 az group create \
   --name "$RESOURCE_GROUP_NAME" \
