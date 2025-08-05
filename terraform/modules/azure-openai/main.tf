@@ -6,11 +6,6 @@ resource "azurerm_cognitive_account" "this" {
   sku_name            = "S0"
 
   custom_subdomain_name = var.name
-
-  tags = {
-    environment = "dev"
-    managed_by  = "terraform"
-  }
 }
 
 resource "azurerm_cognitive_deployment" "gpt_35_turbo" {
