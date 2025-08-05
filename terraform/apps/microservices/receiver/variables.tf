@@ -19,3 +19,7 @@ variable "servicebus_subscription_id" {
 variable "storage_id" {
   type = string
 }
+
+variable "app_name" {
+  type = string
+}

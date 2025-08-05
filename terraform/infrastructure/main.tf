@@ -244,6 +244,17 @@ module "apim_nsg" {
       destination_address_prefix = "VirtualNetwork"
     },
     {
+      name                       = "AllowAppGwToAPIMDynamicPorts"
+      priority                   = 120
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "65200-65535"
+      source_address_prefix      = "192.168.60.32/27"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
       name                       = "DenyAllInbound"
       priority                   = 200
       direction                  = "Inbound"

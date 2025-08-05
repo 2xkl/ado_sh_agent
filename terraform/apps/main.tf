@@ -1,8 +1,14 @@
 data "azurerm_client_config" "current" {}
 
 data "azurerm_kubernetes_cluster" "aks" {
-  name                = "akscluster"
-  resource_group_name = "z-rg-aks-dev"
+  name                = var.aks_name
+  resource_group_name = var.aks_rg
+}
+
+data "azurerm_subnet" "private" {
+  name                 = var.pe_subnet
+  virtual_network_name = var.pe_vnet
+  resource_group_name  = var.network_rg
 }
 
 module "rg" {
@@ -28,17 +34,11 @@ module "key_vault" {
   resource_group_name = module.rg.name
 }
 
-data "azurerm_subnet" "private" {
-  name                 = "pe-subnet"
-  virtual_network_name = "aks-vnet"
-  resource_group_name  = "z-rg-network-dev"
-}
-
 module "kv_private_endpoint" {
   source              = "../modules/private-endpoint"
-  name                = "kv"
+  name                = "${var.kv_name}-pe"
   location            = var.location
-  resource_group_name = "z-rg-network-dev"
+  resource_group_name = var.network_rg
   subnet_id           = data.azurerm_subnet.private.id
   resource_id         = module.key_vault.id
   subresource_names   = ["vault"]
@@ -47,7 +47,7 @@ module "kv_private_endpoint" {
 resource "azurerm_private_dns_a_record" "keyvault" {
   name                = var.kv_name
   zone_name           = "privatelink.vaultcore.azure.net"
-  resource_group_name = "z-rg-network-dev"
+  resource_group_name = var.network_rg
 
   ttl     = 10
   records = [module.kv_private_endpoint.private_ip_address]
@@ -55,7 +55,7 @@ resource "azurerm_private_dns_a_record" "keyvault" {
 
 module "storage" {
   source               = "../modules/storage-account"
-  storage_account_name = "storappsdevasd213"
+  storage_account_name = var.sa_name
   resource_group_name  = module.rg.name
   location             = var.location
   replication_type     = "LRS"
@@ -64,26 +64,25 @@ module "storage" {
 
 module "storage_private_endpoint" {
   source              = "../modules/private-endpoint"
-  name                = "storage"
+  name                = "${var.sa_name}-pe"
   location            = var.location
-  resource_group_name = "z-rg-network-dev"
+  resource_group_name = var.network_rg
   subnet_id           = data.azurerm_subnet.private.id
   resource_id         = module.storage.storage_id
   subresource_names   = ["table"]
 }
 
 resource "azurerm_private_dns_a_record" "storage" {
-  name                = "storappsdevasd213"
+  name                = var.sa_name
   zone_name           = "privatelink.table.core.windows.net"
-  resource_group_name = "z-rg-network-dev"
+  resource_group_name = var.network_rg
 
   ttl     = 10
   records = [module.storage_private_endpoint.private_ip_address]
 }
 
 module "azure_open_ai" {
-  source = "../modules/azure-openai"
-
+  source              = "../modules/azure-openai"
   name                = var.aoi_name
   location            = var.location
   resource_group_name = module.rg.name
@@ -102,9 +101,8 @@ resource "azurerm_key_vault_secret" "openai_key" {
 }
 
 module "servicebus" {
-  source = "../modules/servicebus"
-
-  name                = "sb-apps-cust-dev"
+  source              = "../modules/servicebus"
+  name                = var.sb_name
   location            = var.location
   resource_group_name = module.rg.name
   topic_name          = "events"
@@ -112,8 +110,8 @@ module "servicebus" {
 }
 
 module "inspector" {
-  source = "./microservices/inspector"
-
+  source              = "./microservices/inspector"
+  app_name            = "inspector"
   location            = var.location
   resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -121,8 +119,8 @@ module "inspector" {
 }
 
 module "chat" {
-  source = "./microservices/chat"
-
+  source              = "./microservices/chat"
+  app_name            = "chat"
   location            = var.location
   resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -130,8 +128,8 @@ module "chat" {
 }
 
 module "publisher" {
-  source = "./microservices/publisher"
-
+  source                     = "./microservices/publisher"
+  app_name                   = "publisher"
   location                   = var.location
   resource_group_name        = module.rg.name
   oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -139,8 +137,8 @@ module "publisher" {
 }
 
 module "receiver" {
-  source = "./microservices/receiver"
-
+  source                     = "./microservices/receiver"
+  app_name                   = "receiver"
   location                   = var.location
   resource_group_name        = module.rg.name
   oidc_issuer_url            = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url
@@ -149,8 +147,8 @@ module "receiver" {
 }
 
 module "viewer" {
-  source = "./microservices/viewer"
-
+  source              = "./microservices/viewer"
+  app_name            = "viewer"
   location            = var.location
   resource_group_name = module.rg.name
   oidc_issuer_url     = data.azurerm_kubernetes_cluster.aks.oidc_issuer_url

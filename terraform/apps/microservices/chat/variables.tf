@@ -15,3 +15,7 @@ variable "oidc_issuer_url" {
 variable "key_vault_id" {
   type = string
 }
+
+variable "app_name" {
+  type = string
+}
