@@ -147,7 +147,7 @@ module "aks_nsg" {
       source_port_range          = "*"
       destination_port_range     = "80"
       source_address_prefix      = "192.168.60.0/27"
-      destination_address_prefix = "VirtualNetwork"
+      destination_address_prefix = "192.168.61.0/24"
     },
     {
       name                       = "AllowAPIMtoAKS"
@@ -158,7 +158,7 @@ module "aks_nsg" {
       source_port_range          = "*"
       destination_port_range     = "443"
       source_address_prefix      = "192.168.60.0/27"
-      destination_address_prefix = "VirtualNetwork"
+      destination_address_prefix = "192.168.61.0/24"
     },
     {
       name                       = "DenyAllInbound"
