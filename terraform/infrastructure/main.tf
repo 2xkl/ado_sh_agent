@@ -194,7 +194,18 @@ module "endpoints_nsg" {
       source_port_range          = "*"
       destination_port_range     = "80"
       source_address_prefix      = "192.168.61.0/27"
-      destination_address_prefix = "VirtualNetwork"
+      destination_address_prefix = "192.168.62.0/25"
+    },
+    {
+      name                       = "AllowAKStoEndpointsHttps"
+      priority                   = 111
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "192.168.61.0/27"
+      destination_address_prefix = "192.168.62.0/25"
     },
     {
       name                       = "DenyAllInbound"
