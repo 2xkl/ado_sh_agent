@@ -61,7 +61,3 @@ variable "apim_name" {
 variable "aks_managed_identity" {
   type = string
 }
-
-variable "range_subnet_pe" {
-  type = list(string)
-}

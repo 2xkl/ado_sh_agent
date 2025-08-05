@@ -42,7 +42,7 @@ module "rg_network" {
 
 module "vnet_ingress" {
   source              = "../modules/vnet"
-  vnet_name           = "ingress"
+  vnet_name           = "ingress-vnet"
   address_space       = var.range_vnet_ingress
   location            = var.location
   resource_group_name = module.rg_network.name
@@ -66,7 +66,7 @@ module "subnet_agw" {
 
 module "vnet_aks" {
   source              = "../modules/vnet"
-  vnet_name           = "aks"
+  vnet_name           = "aks-vnet"
   address_space       = var.range_vnet_aks
   location            = var.location
   resource_group_name = module.rg_network.name
@@ -96,7 +96,7 @@ module "private_dns_table" {
 
 module "vnet_endpoints" {
   source              = "../modules/vnet"
-  vnet_name           = "endpoints"
+  vnet_name           = "endpoints-vnet"
   address_space       = var.range_vnet_endpoints
   location            = var.location
   resource_group_name = module.rg_network.name
