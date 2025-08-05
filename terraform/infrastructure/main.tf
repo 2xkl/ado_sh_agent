@@ -150,7 +150,7 @@ module "aks_nsg" {
       destination_address_prefix = "192.168.61.0/24"
     },
     {
-      name                       = "AllowAPIMtoAKS"
+      name                       = "AllowAPIMtoAKSHttps"
       priority                   = 111
       direction                  = "Inbound"
       access                     = "Allow"
