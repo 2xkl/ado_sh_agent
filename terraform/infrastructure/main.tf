@@ -132,42 +132,6 @@ module "peering_aks_endpoints" {
   target_vnet_id   = module.vnet_endpoints.vnet_id
 }
 
-module "aks_nsg" {
-  source              = "../modules/nsg"
-  nsg_name            = "${module.subnet_aks.name}-nsg"
-  location            = var.location
-  resource_group_name = module.rg_network.name
-  security_rules = [
-    {
-      name                       = "AllowAllFromIngress"
-      priority                   = 100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "192.168.60.0/24"
-      destination_address_prefix = "*"
-    },
-    {
-      name                       = "DenyAllInbound"
-      priority                   = 200
-      direction                  = "Inbound"
-      access                     = "Deny"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    }
-  ]
-}
-
-resource "azurerm_subnet_network_security_group_association" "aks_assoc" {
-  subnet_id                 = module.subnet_aks.subnet_id
-  network_security_group_id = module.aks_nsg.nsg_id
-}
-
 module "endpoints_nsg" {
   source              = "../modules/nsg"
   nsg_name            = "${module.subnet_pe.name}-nsg"
