@@ -2,11 +2,11 @@ resource_group_name = "z-rg-apps-dev"
 location            = "westeurope"
 
 #RESOURCES
-aoi_name = "z-aoi-apps-f-dev"
+aoi_name = "z-aoi-apps-krkm-dev"
 swa_name = "z-swa-apps-dev"
-kv_name  = "z-kv-apps-vkrd-dev"
-sa_name  = "storrandocuas2"
-sb_name  = "sb-apps-cust-dev"
+kv_name  = "z-kv-apps-krkm-dev"
+sa_name  = "storrankrkmdev"
+sb_name  = "sb-apps-krkm-dev"
 
 #DATA
 aks_name   = "akscluster"
