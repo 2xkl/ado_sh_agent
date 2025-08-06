@@ -1,0 +1,72 @@
+trigger:
+  - main
+
+pool:
+  name: Default
+
+parameters:
+  - name: runApply
+    displayName: "Run Terraform Apply?"
+    type: boolean
+    default: false
+  - name: runDestroy
+    displayName: "Run Terraform Destroy?"
+    type: boolean
+    default: false
+
+variables:
+  - group: SEC_MS
+  - name: TF_VERSION
+    value: "1.7.5"
+
+stages:
+  - stage: BA
+    displayName: "Terraform Buildagent"
+    jobs:
+      - job: Terraform
+        displayName: "Buildagent infra"
+        steps:
+          - task: Bash@3
+            displayName: "Terraform Init & Plan"
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/build_agent
+              script: |
+                terraform init -backend-config=backend.config
+                terraform plan -var-file="parameters/common.tfvars" -out=common-tfplan
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)
+
+          - task: Bash@3
+            displayName: "Terraform Apply"
+            condition: and(succeeded(), eq('${{ parameters.runApply }}', true))
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/build_agent
+              script: |
+                terraform apply common-tfplan
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)
+
+          - task: Bash@3
+            displayName: "Terraform Destroy"
+            condition: and(succeeded(), eq('${{ parameters.runDestroy }}', true))
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/build_agent
+              script: |
+                terraform destroy common-tfplan
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)

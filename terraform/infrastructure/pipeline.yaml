@@ -1,0 +1,53 @@
+trigger:
+  - none
+
+pool:
+  name: Default
+
+parameters:
+  - name: runApply
+    displayName: "Run Terraform Apply?"
+    type: boolean
+    default: false
+
+variables:
+  - group: SEC_MS
+  - name: TF_VERSION
+    value: "1.7.5"
+
+stages:
+  - stage: BA
+    displayName: "Terraform Infrastructure"
+    jobs:
+      - job: Terraform
+        displayName: "Infrastructure"
+        steps:
+          - task: Bash@3
+            displayName: "Terraform Init & Plan"
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/infrastructure
+              script: |
+                terraform init -backend-config=backend.config
+                terraform plan -var-file="parameters/dev.tfvars" -out=infra-dev-tfplan
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)
+
+          - task: Bash@3
+            displayName: "Terraform Apply"
+            condition: and(succeeded(), eq('${{ parameters.runApply }}', true))
+            inputs:
+              targetType: "inline"
+              workingDirectory: terraform/infrastructure
+              script: |
+                terraform apply infra-dev-tfplan
+            env:
+              ARM_ACCESS_KEY: $(ARMACCESSKEY)
+              ARM_CLIENT_ID: $(ARMCLIENTID)
+              ARM_CLIENT_SECRET: $(ARMCLIENTSECRET)
+              ARM_SUBSCRIPTION_ID: $(ARMSUBSCRIPTIONID)
+              ARM_TENANT_ID: $(ARMTENANTID)
