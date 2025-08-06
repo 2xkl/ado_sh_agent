@@ -3,7 +3,7 @@ location    = "westeurope"
 
 #SHARED
 rg_shared = "z-rg-shared-dev"
-acr_name  = "zrgsharedacr001dev"
+acr_name  = "zacrkrkmxa001dev"
 
 #NETWORK
 rg_network = "z-rg-network-dev"
