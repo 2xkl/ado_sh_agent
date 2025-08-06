@@ -276,7 +276,7 @@ module "aks" {
   aks_cluster_name         = var.aks_cluster_name
   dns_prefix               = "${var.aks_cluster_name}er001"
   node_count               = 1
-  node_vm_size             = "Standard_DS2_v2"
+  node_vm_size             = "Standard_B2ms"
   vnet_subnet_id           = module.subnet_aks.subnet_id
 
   user_managed_identity_id = module.umi.umi_id

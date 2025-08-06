@@ -25,9 +25,9 @@ range_subnet_pe      = ["192.168.62.0/25"]
 rg_aks               = "z-rg-aks-dev"
 rg_aks_node          = "z-rg-aksnode-dev"
 aks_managed_identity = "z-umi-aks-dev"
-aks_cluster_name = "akscluster"
+aks_cluster_name     = "akscluster"
 
 #INGRESS
-rg_ingress = "z-rg-ingress-dev"
-apim_name  = "apim-cus-krkm"
+rg_ingress               = "z-rg-ingress-dev"
+apim_name                = "apim-cus-krkm"
 application_gateway_name = "appgw"
