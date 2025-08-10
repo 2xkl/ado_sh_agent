@@ -14,20 +14,20 @@ resource "azurerm_api_management" "apim" {
 
 }
 
-resource "azurerm_monitor_diagnostic_setting" "apim_diag" {
-  name                       = "${var.apim_name}-diagnostic"
-  target_resource_id         = azurerm_api_management.apim.id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
+# resource "azurerm_monitor_diagnostic_setting" "apim_diag" {
+#   name                       = "${var.apim_name}-diagnostic"
+#   target_resource_id         = azurerm_api_management.apim.id
+#   log_analytics_workspace_id = var.log_analytics_workspace_id
 
-  enabled_metric {
-    category = "AllMetrics"
-  }
+#   enabled_metric {
+#     category = "AllMetrics"
+#   }
 
-  enabled_log {
-    category_group = "allLogs"
-  }
+#   enabled_log {
+#     category_group = "allLogs"
+#   }
 
-  enabled_log {
-    category_group = "audit"
-  }
-}
+#   enabled_log {
+#     category_group = "audit"
+#   }
+# }
